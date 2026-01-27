@@ -1,0 +1,67 @@
+/* =========================================
+   Footer Styles
+   ========================================= */
+
+.footer__newsletter-input-wrapper {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.footer__newsletter-input {
+  flex: 1;
+  padding: 1.2rem 1.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: inherit;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.3s ease;
+  border-radius: 4px 0 0 4px;
+}
+
+.footer__newsletter-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(22, 135, 89, 0.1);
+}
+
+.footer__newsletter-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.footer__newsletter-button {
+  padding: 1.2rem 2rem;
+  background: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  font-weight: 600;
+  border-radius: 0 4px 4px 0;
+}
+
+.footer__newsletter-button:hover {
+  background: rgba(22, 135, 89, 0.9);
+  transform: translateX(3px);
+}
+
+.footer__newsletter-button:active {
+  transform: translateX(1px);
+}
+
+.footer__newsletter-button svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+

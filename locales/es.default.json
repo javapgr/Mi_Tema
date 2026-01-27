@@ -1,0 +1,31 @@
+{
+  "general": {
+    "accessibility": {
+      "skip_to_text": "Saltar al contenido",
+      "close": "Cerrar"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Agregar al carrito",
+      "sold_out": "Agotado",
+      "quantity": "Cantidad",
+      "description": "Descripción"
+    }
+  },
+  "collections": {
+    "general": {
+      "no_matches": "No se encontraron productos"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Carrito",
+      "empty": "Tu carrito está vacío",
+      "continue_shopping": "Continuar comprando",
+      "checkout": "Finalizar compra",
+      "subtotal": "Subtotal",
+      "remove": "Eliminar"
+    }
+  }
+}

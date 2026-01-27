@@ -1,0 +1,9 @@
+# Archivos y carpetas ignorados por Git
+node_modules/
+dist/
+.env
+.DS_Store
+*.log
+.shopify/
+# Ignorar archivos temporales de VS Code
+.vscode/

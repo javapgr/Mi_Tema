@@ -1,0 +1,282 @@
+/* =========================================
+   ISSLAM Theme - Base Styles
+   Paleta: Negro, Blanco, Verde Esmeralda
+   ========================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1.6rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================
+   Typography
+   ========================================= */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+h1 { font-size: 4.8rem; }
+h2 { font-size: 3.6rem; }
+h3 { font-size: 2.8rem; }
+h4 { font-size: 2.2rem; }
+h5 { font-size: 1.8rem; }
+h6 { font-size: 1.6rem; }
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-primary);
+}
+
+/* =========================================
+   Utility Classes
+   ========================================= */
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-to-content-link:focus {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9999;
+  padding: 1rem 2rem;
+  background: var(--color-primary);
+  color: white;
+  clip: auto;
+  width: auto;
+  height: auto;
+}
+
+/* =========================================
+   Buttons
+   ========================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1.2rem 2.4rem;
+  font-family: var(--font-body);
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn--primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn--primary:hover {
+  background-color: var(--color-secondary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn--secondary {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 2px solid var(--color-text);
+}
+
+.btn--secondary:hover {
+  background-color: var(--color-text);
+  color: var(--color-background);
+}
+
+.btn--accent {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+/* =========================================
+   Grid System
+   ========================================= */
+
+.grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+.grid--4 { grid-template-columns: repeat(4, 1fr); }
+.grid--5 { grid-template-columns: repeat(5, 1fr); }
+.grid--6 { grid-template-columns: repeat(6, 1fr); }
+
+@media (max-width: 1024px) {
+  .grid--5, .grid--6 { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .grid--3, .grid--4, .grid--5, .grid--6 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .grid--2, .grid--3, .grid--4, .grid--5, .grid--6 { grid-template-columns: 1fr; }
+}
+
+/* =========================================
+   Images
+   ========================================= */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.img-rounded {
+  border-radius: var(--border-radius);
+}
+
+/* =========================================
+   Forms
+   ========================================= */
+
+input, textarea, select {
+  font-family: var(--font-body);
+  font-size: 1.6rem;
+  padding: 1.2rem 1.6rem;
+  border: 1px solid #e5e5e5;
+  border-radius: var(--border-radius);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(13, 80, 60, 0.1);
+}
+
+/* =========================================
+   Section Spacing
+   ========================================= */
+
+.section {
+  padding: 6rem 0;
+}
+
+.section--sm {
+  padding: 3rem 0;
+}
+
+.section--lg {
+  padding: 10rem 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-header__title {
+  margin-bottom: 1rem;
+}
+
+.section-header__subtitle {
+  color: var(--color-text-light);
+  font-size: 1.8rem;
+}
+
+/* =========================================
+   Main Content
+   ========================================= */
+
+.main-content {
+  min-height: 50vh;
+}
+
+/* =========================================
+   Animations
+   ========================================= */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease forwards;
+}

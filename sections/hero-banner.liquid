@@ -1,0 +1,122 @@
+<!-- Sección Hero / Banner Principal -->
+<section class="hero" style="background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    <div class="hero__content">
+      {% if section.settings.subtitle != blank %}
+        <p class="hero__subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+      
+      <h1 class="hero__title">{{ section.settings.title }}</h1>
+      
+      {% if section.settings.description != blank %}
+        <p class="hero__description">{{ section.settings.description }}</p>
+      {% endif %}
+
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="btn btn--primary hero__button">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: 8rem 0;
+    text-align: center;
+  }
+
+  .hero__content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .hero__subtitle {
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .hero__title {
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    color: var(--color-text);
+  }
+
+  .hero__description {
+    font-size: 1.8rem;
+    color: var(--color-text-light);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+
+  .hero__button {
+    font-size: 1.6rem;
+    padding: 1.5rem 4rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 5rem 0;
+    }
+
+    .hero__description {
+      font-size: 1.6rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "tag": "section",
+  "class": "hero-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Nueva colección"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Tu estilo cambia cada día. ¿Cuál eliges hoy?"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto del botón",
+      "default": "Ver colección"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

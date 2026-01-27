@@ -1,0 +1,260 @@
+<!-- Sección Nosotros -->
+<section class="about-us">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <div class="about-us__header">
+        <h2 class="about-us__section-title">{{ section.settings.title }}</h2>
+      </div>
+    {% endif %}
+
+    <div class="about-us__container">
+      <!-- Imagen del CEO -->
+      {% if section.settings.ceo_image != blank %}
+        <div class="about-us__image-wrapper">
+          <img 
+            src="{{ section.settings.ceo_image | image_url: width: 800 }}"
+            alt="{{ section.settings.ceo_name }}"
+            class="about-us__image"
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+
+      <!-- Información del CEO -->
+      <div class="about-us__content">
+        {% if section.settings.ceo_name != blank %}
+          <h3 class="about-us__name">{{ section.settings.ceo_name }}</h3>
+        {% endif %}
+        
+        {% if section.settings.ceo_title != blank %}
+          <p class="about-us__title">{{ section.settings.ceo_title }}</p>
+        {% endif %}
+        
+        {% if section.settings.ceo_description != blank %}
+          <p class="about-us__description">{{ section.settings.ceo_description }}</p>
+        {% endif %}
+        
+        {% if section.settings.ceo_bio != blank %}
+          <p class="about-us__bio">{{ section.settings.ceo_bio | newline_to_br }}</p>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <div class="about-us__text">{{ section.settings.description | newline_to_br }}</div>
+        {% endif %}
+
+        {% if section.settings.button_label != blank %}
+          <a href="{{ section.settings.button_link }}" class="about-us__button">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-us {
+    padding: 60px 20px;
+    background-color: var(--color-background, #ffffff);
+  }
+
+  .about-us__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .about-us__section-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-text, #1a1a1a);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .about-us__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .about-us__image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+  }
+
+  .about-us__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .about-us__image-placeholder {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .about-us__image-placeholder svg {
+    width: 100px;
+    height: 100px;
+    color: #ccc;
+  }
+
+  .about-us__content {
+    padding: 20px 0;
+  }
+
+  .about-us__name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-text, #1a1a1a);
+    margin: 0 0 10px 0;
+    letter-spacing: 2px;
+  }
+
+  .about-us__title {
+    font-size: 1.2rem;
+    color: var(--color-primary, #0D503C);
+    margin: 0 0 20px 0;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .about-us__description {
+    font-size: 1.1rem;
+    color: var(--color-text, #1a1a1a);
+    margin: 0 0 20px 0;
+    line-height: 1.6;
+  }
+
+  .about-us__bio {
+    font-size: 1rem;
+    color: var(--color-text-light, #6B7280);
+    margin: 0 0 20px 0;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  .about-us__text {
+    font-size: 1rem;
+    color: var(--color-text-light, #6B7280);
+    margin: 0 0 30px 0;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  .about-us__button {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: var(--color-primary, #0D503C);
+    color: #ffffff;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+  }
+
+  .about-us__button:hover {
+    background-color: var(--color-secondary, #000000);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .about-us {
+      padding: 40px 20px;
+    }
+
+    .about-us__container {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .about-us__name {
+      font-size: 2rem;
+    }
+
+    .about-us__section-title {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Nosotros",
+  "tag": "section",
+  "class": "section-about-us",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título de la sección",
+      "default": "Nosotros"
+    },
+    {
+      "type": "image_picker",
+      "id": "ceo_image",
+      "label": "Imagen"
+    },
+    {
+      "type": "text",
+      "id": "ceo_name",
+      "label": "Nombre",
+      "default": "Franco Ramos"
+    },
+    {
+      "type": "text",
+      "id": "ceo_title",
+      "label": "Cargo/Puesto",
+      "default": "Fundador & CEO"
+    },
+    {
+      "type": "textarea",
+      "id": "ceo_description",
+      "label": "Descripción corta",
+      "default": "Emprendedor desde los 15 años"
+    },
+    {
+      "type": "textarea",
+      "id": "ceo_bio",
+      "label": "Biografía/Historia",
+      "default": "Cuéntanos tu historia"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción general",
+      "default": "Información adicional"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón",
+      "default": "Contacto"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Enlace del botón"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nosotros"
+    }
+  ]
+}
+{% endschema %}

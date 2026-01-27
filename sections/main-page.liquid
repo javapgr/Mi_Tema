@@ -1,0 +1,72 @@
+<!-- Sección de Página -->
+<section class="page section">
+  <div class="container">
+    <div class="page__content">
+      <h1 class="page__title">{{ page.title }}</h1>
+      <div class="page__body rte">
+        {{ page.content }}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .page__content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .page__title {
+    font-size: 3.6rem;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .page__body {
+    font-size: 1.7rem;
+    line-height: 1.8;
+  }
+
+  .page__body h2 {
+    font-size: 2.4rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .page__body h3 {
+    font-size: 2rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .page__body p {
+    margin-bottom: 1.5rem;
+  }
+
+  .page__body ul, .page__body ol {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+  }
+
+  .page__body li {
+    margin-bottom: 0.5rem;
+  }
+
+  .page__body img {
+    border-radius: var(--border-radius);
+    margin: 2rem 0;
+  }
+
+  .page__body a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Página Principal",
+  "tag": "section",
+  "class": "page-section"
+}
+{% endschema %}

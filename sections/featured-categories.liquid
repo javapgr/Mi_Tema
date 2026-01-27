@@ -1,0 +1,184 @@
+<!-- Grid de Categorías Destacadas (4 columnas como en la referencia) -->
+<section class="featured-categories section" style="background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <div class="section-header">
+        <h2 class="section-header__title">{{ section.settings.title }}</h2>
+      </div>
+    {% endif %}
+
+    <div class="featured-categories__grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="featured-category" {{ block.shopify_attributes }}>
+          <div class="featured-category__image-wrapper">
+            {% if block.settings.image != blank %}
+              <img 
+                src="{{ block.settings.image | image_url: width: 600 }}"
+                srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
+                        {{ block.settings.image | image_url: width: 600 }} 600w,
+                        {{ block.settings.image | image_url: width: 800 }} 800w"
+                sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 25vw"
+                alt="{{ block.settings.title }}"
+                class="featured-category__image"
+                loading="lazy"
+              >
+            {% else %}
+              {{ 'collection-1' | placeholder_svg_tag: 'featured-category__image placeholder' }}
+            {% endif %}
+            
+            {% if block.settings.overlay_text != blank %}
+              <div class="featured-category__overlay">
+                <span class="featured-category__overlay-text">{{ block.settings.overlay_text }}</span>
+              </div>
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-categories {
+    padding: 4rem 0 6rem;
+  }
+
+  .featured-categories__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+
+  .featured-category {
+    display: block;
+    position: relative;
+    transition: transform 0.3s ease;
+  }
+
+  .featured-category:hover {
+    transform: translateY(-8px);
+  }
+
+  .featured-category__image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3/4;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background-color: #f5f5f5;
+  }
+
+  .featured-category__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .featured-category:hover .featured-category__image {
+    transform: scale(1.08);
+  }
+
+  .featured-category__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .featured-category__overlay-text {
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .featured-category__image.placeholder {
+    padding: 20%;
+    background-color: #f0f0f0;
+  }
+
+  @media (max-width: 1024px) {
+    .featured-categories__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .featured-categories__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .featured-category__image-wrapper {
+      aspect-ratio: 4/3;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Categorías Destacadas",
+  "tag": "section",
+  "class": "featured-categories-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título de la sección",
+      "default": "Tu estilo cambia cada día. ¿Cuál eliges hoy?"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Categoría",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título (para accesibilidad)",
+          "default": "Categoría"
+        },
+        {
+          "type": "text",
+          "id": "overlay_text",
+          "label": "Texto sobre imagen"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Enlace"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Categorías Destacadas",
+      "blocks": [
+        { "type": "category", "settings": { "title": "Anime" } },
+        { "type": "category", "settings": { "title": "Música" } },
+        { "type": "category", "settings": { "title": "Comics" } },
+        { "type": "category", "settings": { "title": "Juegos" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

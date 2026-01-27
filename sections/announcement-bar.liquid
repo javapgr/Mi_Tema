@@ -1,0 +1,56 @@
+<!-- Barra de Anuncios Superior -->
+<div class="announcement-bar" style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};">
+  <div class="container">
+    <div class="announcement-bar__message">
+      {% if section.settings.show_icon %}
+        <span>{{ section.settings.icon }}</span>
+      {% endif %}
+      {{ section.settings.message }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Barra de Anuncios",
+  "tag": "section",
+  "class": "announcement-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Mensaje",
+      "default": "COMPRA FÁCIL, ENTREGA RÁPIDA Y PAGO 100% SEGURO"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "Mostrar icono",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Icono (emoji)",
+      "default": "🔥"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Barra de Anuncios"
+    }
+  ]
+}
+{% endschema %}

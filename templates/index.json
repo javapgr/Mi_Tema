@@ -1,0 +1,55 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "settings": {
+        "title": "Tu estilo cambia cada día. ¿Cuál eliges hoy?",
+        "subtitle": "ISSLAM CLOTHING - Donde la Pasión es Estilo",
+        "background_color": "#ffffff"
+      }
+    },
+    "featured-categories": {
+      "type": "featured-categories",
+      "blocks": {
+        "category-1": {
+          "type": "category",
+          "settings": {
+            "title": "Anime",
+            "link": "/collections/anime"
+          }
+        },
+        "category-2": {
+          "type": "category",
+          "settings": {
+            "title": "Música",
+            "link": "/collections/musica"
+          }
+        },
+        "category-3": {
+          "type": "category",
+          "settings": {
+            "title": "Deportes",
+            "link": "/collections/deportes"
+          }
+        },
+        "category-4": {
+          "type": "category",
+          "settings": {
+            "title": "Juegos",
+            "link": "/collections/juegos"
+          }
+        },
+        "category-5": {
+          "type": "category",
+          "settings": {
+            "title": "Pelis & Series",
+            "link": "/collections/peliculas-series"
+          }
+        }
+      },
+      "block_order": ["category-1", "category-2", "category-3", "category-4", "category-5"],
+      "settings": {}
+    }
+  },
+  "order": ["hero", "featured-categories"]
+}

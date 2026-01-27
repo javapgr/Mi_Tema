@@ -1,0 +1,125 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "ISSLAM Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "ISSLAM",
+    "theme_documentation_url": "https://isslam.com",
+    "theme_support_url": "https://isslam.com/support"
+  },
+  {
+    "name": "Colores",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Colores principales"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Color primario",
+        "default": "#0D503C",
+        "info": "Verde esmeralda oscuro"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Color secundario",
+        "default": "#000000",
+        "info": "Negro"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Color de acento",
+        "default": "#10B981",
+        "info": "Verde esmeralda claro"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Color de fondo",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Color de texto",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_text_light",
+        "label": "Color de texto claro",
+        "default": "#6B7280"
+      }
+    ]
+  },
+  {
+    "name": "Tipografía",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Fuente de títulos",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Fuente del cuerpo",
+        "default": "assistant_n4"
+      }
+    ]
+  },
+  {
+    "name": "Diseño",
+    "settings": [
+      {
+        "type": "range",
+        "id": "border_radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Radio de bordes",
+        "default": 16
+      }
+    ]
+  },
+  {
+    "name": "Redes sociales",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Redes sociales"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok",
+        "label": "TikTok"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter",
+        "label": "Twitter/X"
+      },
+      {
+        "type": "text",
+        "id": "social_whatsapp",
+        "label": "WhatsApp",
+        "info": "Número completo con código de país"
+      }
+    ]
+  }
+]

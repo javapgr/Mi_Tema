@@ -1,0 +1,47 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "settings": {
+        "title": "Bienvenido a ISSLAM CLOTHING",
+        "subtitle": "Donde la Pasión se Convierte en Estilo",
+        "description": "Somos más que una tienda, somos una comunidad de apasionados por la música, deportes, anime, videojuegos y entretenimiento",
+        "button_text": "Explorar Colecciones",
+        "button_link": "/",
+        "background_color": "#0D503C"
+      }
+    },
+    "about": {
+      "type": "about-us",
+      "settings": {
+        "title": "¿Quiénes Somos?",
+        "description": "ISSLAM Clothing nace de la pasión de emprendedores jóvenes que decidieron crear un espacio único donde convergen el estilo, la cultura pop y la moda. Somos una empresa dedicada a ofrecer mercancía oficial y productos de alta calidad relacionados con tus intereses favoritos.",
+        "ceo_name": "Franco Ramos",
+        "ceo_title": "Fundador & CEO",
+        "ceo_description": "Emprendedor desde los 15 años, especializado en Marketing. Estudiante de Instituto Cibertec-Lima.",
+        "ceo_bio": "Con una visión clara de crear una comunidad alrededor de la cultura pop y el entretenimiento, Franco lidera ISSLAM con pasión y determinación, buscando constantemente innovar y mejorar la experiencia de nuestros clientes.",
+        "button_label": "Contáctanos",
+        "button_link": "/pages/contacto"
+      }
+    },
+    "mission": {
+      "type": "about-us",
+      "settings": {
+        "title": "Nuestra Misión",
+        "description": "Proporcionar a nuestros clientes productos de la más alta calidad que representen sus pasiones, intereses y estilos de vida, creando una comunidad global de personas que comparten amor por la música, deportes, anime, videojuegos y entretenimiento.",
+        "button_label": "Ver Nuestros Valores",
+        "button_link": ""
+      }
+    },
+    "values": {
+      "type": "about-us",
+      "settings": {
+        "title": "Nuestros Valores",
+        "description": "🎯 Calidad - Productos auténticos y de excelencia\n💚 Pasión - Amamos lo que hacemos y vendemos\n🤝 Comunidad - Construimos relaciones, no solo transacciones\n🌟 Innovación - Siempre buscamos mejorar\n✨ Autenticidad - Somos verdaderos fans",
+        "button_label": "Explorar Tienda",
+        "button_link": "/collections/all"
+      }
+    }
+  },
+  "order": ["hero", "about", "mission", "values"]
+}
