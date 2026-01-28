@@ -1,0 +1,360 @@
+<!-- Sección Personalizada: Colección de Juegos -->
+<section class="collection-juegos section">
+  <div class="container">
+    <!-- Header Personalizado para Juegos -->
+    <div class="collection-juegos__header">
+      <div class="collection-juegos__badge">🎮 JUEGOS</div>
+      <h1 class="collection-juegos__title">Colección de Videojuegos</h1>
+      <p class="collection-juegos__subtitle">Domina el juego</p>
+      <p class="collection-juegos__description">
+        Merchandise oficial de tus videojuegos favoritos. Camisetas, accesorios, figuras y mucho más.
+      </p>
+    </div>
+
+    <!-- Categorías de Juegos -->
+    <div class="collection-juegos__categories">
+      <div class="categories-grid">
+        <div class="category-card">
+          <div class="category-card__icon">⚔️</div>
+          <h3 class="category-card__title">RPG</h3>
+          <p class="category-card__count">Aventuras épicas</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🏃</div>
+          <h3 class="category-card__title">Acción</h3>
+          <p class="category-card__count">Adrenalina pura</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🧩</div>
+          <h3 class="category-card__title">Puzzle</h3>
+          <p class="category-card__count">Desafía tu mente</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🏁</div>
+          <h3 class="category-card__title">Racing</h3>
+          <p class="category-card__count">A toda velocidad</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🏰</div>
+          <h3 class="category-card__title">Estrategia</h3>
+          <p class="category-card__count">Planifica tu juego</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🌍</div>
+          <h3 class="category-card__title">Open World</h3>
+          <p class="category-card__count">Mundo abierto</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="collection__toolbar">
+      <div class="collection__sort">
+        <label for="sort-by-juegos">Ordenar por:</label>
+        <select id="sort-by-juegos" class="collection__sort-select">
+          <option value="manual">Destacados</option>
+          <option value="best-selling">Más vendidos</option>
+          <option value="price-ascending">Precio: Menor a Mayor</option>
+          <option value="price-descending">Precio: Mayor a Menor</option>
+          <option value="created-descending">Más recientes</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid de Productos -->
+    <div class="collection__grid grid grid--4">
+      {% for product in collection.products %}
+        <article class="product-card product-card--juegos">
+          <a href="{{ product.url }}" class="product-card__link">
+            <div class="product-card__image-wrapper">
+              {% if product.featured_image %}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 400 }}"
+                  srcset="{{ product.featured_image | image_url: width: 300 }} 300w,
+                          {{ product.featured_image | image_url: width: 400 }} 400w,
+                          {{ product.featured_image | image_url: width: 600 }} 600w"
+                  sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 25vw"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="product-card__image"
+                  loading="lazy"
+                >
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'product-card__image placeholder' }}
+              {% endif %}
+            </div>
+            <div class="product-card__content">
+              <h3 class="product-card__title">{{ product.title }}</h3>
+              <div class="product-card__price">
+                {% if product.compare_at_price %}
+                  <span class="price price--old">{{ product.compare_at_price | money }}</span>
+                {% endif %}
+                <span class="price price--new">{{ product.price | money }}</span>
+              </div>
+            </div>
+          </a>
+          <div class="product-card__actions">
+            <button class="btn btn--primary btn--small" data-product-id="{{ product.id }}">
+              Agregar al carrito
+            </button>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <!-- Gaming Community Section -->
+    <div class="collection-juegos__community">
+      <h2>Únete a la comunidad gamer</h2>
+      <p>Comparte tus experiencias y gana premios exclusivos</p>
+      <div class="community-cta">
+        <button class="btn btn--secondary">Discord</button>
+        <button class="btn btn--secondary">Twitch</button>
+        <button class="btn btn--secondary">YouTube</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .collection-juegos {
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+    color: white;
+  }
+
+  .collection-juegos__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .collection-juegos__badge {
+    display: inline-block;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 238, 255, 0.1);
+    border-radius: 50px;
+    color: #00EEFF;
+  }
+
+  .collection-juegos__title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .collection-juegos__subtitle {
+    font-size: 1.3rem;
+    color: #00EEFF;
+    margin-bottom: 1rem;
+  }
+
+  .collection-juegos__description {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .collection-juegos__categories {
+    margin-bottom: 3rem;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .category-card {
+    background: rgba(0, 238, 255, 0.05);
+    border: 2px solid #00EEFF;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .category-card:hover {
+    background: rgba(0, 238, 255, 0.15);
+    box-shadow: 0 0 20px rgba(0, 238, 255, 0.3);
+    transform: translateY(-5px);
+  }
+
+  .category-card__icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-card__title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .category-card__count {
+    font-size: 0.85rem;
+    color: #00EEFF;
+  }
+
+  .collection__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+  }
+
+  .collection__sort-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #00EEFF;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #00EEFF;
+    cursor: pointer;
+  }
+
+  .collection__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .product-card {
+    background: white;
+    color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 3px solid transparent;
+  }
+
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(0, 238, 255, 0.3);
+    border-color: #00EEFF;
+  }
+
+  .product-card__image-wrapper {
+    overflow: hidden;
+    height: 250px;
+  }
+
+  .product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .product-card:hover .product-card__image {
+    transform: scale(1.05);
+  }
+
+  .product-card__content {
+    padding: 1.5rem;
+  }
+
+  .product-card__title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .product-card__price {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .price {
+    font-weight: bold;
+  }
+
+  .price--old {
+    text-decoration: line-through;
+    color: #999;
+  }
+
+  .price--new {
+    color: #00EEFF;
+    font-size: 1.2rem;
+  }
+
+  .product-card__actions {
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .btn--primary {
+    background: #00EEFF;
+    color: #1A1A2E;
+  }
+
+  .btn--primary:hover {
+    background: #00D4E8;
+    box-shadow: 0 0 15px rgba(0, 238, 255, 0.5);
+  }
+
+  .btn--secondary {
+    width: auto;
+    background: #00EEFF;
+    color: #1A1A2E;
+    padding: 0.75rem 1.5rem;
+    margin: 0.5rem;
+  }
+
+  .btn--secondary:hover {
+    background: #00D4E8;
+  }
+
+  .collection-juegos__community {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(0, 238, 255, 0.1);
+    border: 2px solid #00EEFF;
+    border-radius: 12px;
+  }
+
+  .collection-juegos__community h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .collection-juegos__community p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+  }
+
+  .community-cta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .collection-juegos__title {
+      font-size: 1.8rem;
+    }
+
+    .collection__grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .categories-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

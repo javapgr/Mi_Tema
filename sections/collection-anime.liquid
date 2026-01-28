@@ -1,0 +1,357 @@
+<!-- Sección Personalizada: Colección de Anime -->
+<section class="collection-anime section">
+  <div class="container">
+    <!-- Header Personalizado para Anime -->
+    <div class="collection-anime__header">
+      <div class="collection-anime__badge">🎌 ANIME</div>
+      <h1 class="collection-anime__title">Colección de Anime</h1>
+      <p class="collection-anime__subtitle">Vive el mundo del manga y anime</p>
+      <p class="collection-anime__description">
+        Descubre la mejor mercancía oficial de tus animes, mangas y personajes favoritos.
+      </p>
+    </div>
+
+    <!-- Categorías de Anime -->
+    <div class="collection-anime__categories">
+      <div class="categories-grid">
+        <div class="category-card">
+          <div class="category-card__icon">🔥</div>
+          <h3 class="category-card__title">Acción</h3>
+          <p class="category-card__count">Aventuras épicas</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">💔</div>
+          <h3 class="category-card__title">Romance</h3>
+          <p class="category-card__count">Historias de amor</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🏙️</div>
+          <h3 class="category-card__title">Slice of Life</h3>
+          <p class="category-card__count">Día a día</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">😂</div>
+          <h3 class="category-card__title">Comedia</h3>
+          <p class="category-card__count">Risas garantizadas</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🌙</div>
+          <h3 class="category-card__title">Misterio</h3>
+          <p class="category-card__count">Suspenso total</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">⚡</div>
+          <h3 class="category-card__title">Shounen</h3>
+          <p class="category-card__count">Para todos</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="collection__toolbar">
+      <div class="collection__sort">
+        <label for="sort-by-anime">Ordenar por:</label>
+        <select id="sort-by-anime" class="collection__sort-select">
+          <option value="manual">Destacados</option>
+          <option value="best-selling">Más vendidos</option>
+          <option value="price-ascending">Precio: Menor a Mayor</option>
+          <option value="price-descending">Precio: Mayor a Menor</option>
+          <option value="created-descending">Más recientes</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid de Productos -->
+    <div class="collection__grid grid grid--4">
+      {% for product in collection.products %}
+        <article class="product-card product-card--anime">
+          <a href="{{ product.url }}" class="product-card__link">
+            <div class="product-card__image-wrapper">
+              {% if product.featured_image %}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 400 }}"
+                  srcset="{{ product.featured_image | image_url: width: 300 }} 300w,
+                          {{ product.featured_image | image_url: width: 400 }} 400w,
+                          {{ product.featured_image | image_url: width: 600 }} 600w"
+                  sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 25vw"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="product-card__image"
+                  loading="lazy"
+                >
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'product-card__image placeholder' }}
+              {% endif %}
+            </div>
+            <div class="product-card__content">
+              <h3 class="product-card__title">{{ product.title }}</h3>
+              <div class="product-card__price">
+                {% if product.compare_at_price %}
+                  <span class="price price--old">{{ product.compare_at_price | money }}</span>
+                {% endif %}
+                <span class="price price--new">{{ product.price | money }}</span>
+              </div>
+            </div>
+          </a>
+          <div class="product-card__actions">
+            <button class="btn btn--primary btn--small" data-product-id="{{ product.id }}">
+              Agregar al carrito
+            </button>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <!-- Promo Banner -->
+    <div class="collection-anime__promo">
+      <h2>¡Nuevos estrenos cada semana!</h2>
+      <p>Suscríbete para recibir alertas de nuevas colecciones de anime</p>
+      <input type="email" placeholder="tu@email.com" class="newsletter-input">
+      <button class="btn btn--secondary">Suscribirse</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .collection-anime {
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #6F2FE0 0%, #3B1F7F 100%);
+    color: white;
+  }
+
+  .collection-anime__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .collection-anime__badge {
+    display: inline-block;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+  }
+
+  .collection-anime__title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .collection-anime__subtitle {
+    font-size: 1.3rem;
+    color: #FFB6D9;
+    margin-bottom: 1rem;
+  }
+
+  .collection-anime__description {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .collection-anime__categories {
+    margin-bottom: 3rem;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .category-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .category-card:hover {
+    background: rgba(255, 182, 217, 0.2);
+    border-color: #FFB6D9;
+    transform: translateY(-5px);
+  }
+
+  .category-card__icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-card__title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .category-card__count {
+    font-size: 0.85rem;
+    color: #FFB6D9;
+  }
+
+  .collection__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+  }
+
+  .collection__sort-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    cursor: pointer;
+  }
+
+  .collection__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .product-card {
+    background: white;
+    color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .product-card__image-wrapper {
+    overflow: hidden;
+    height: 250px;
+  }
+
+  .product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .product-card:hover .product-card__image {
+    transform: scale(1.05);
+  }
+
+  .product-card__content {
+    padding: 1.5rem;
+  }
+
+  .product-card__title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .product-card__price {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .price {
+    font-weight: bold;
+  }
+
+  .price--old {
+    text-decoration: line-through;
+    color: #999;
+  }
+
+  .price--new {
+    color: #6F2FE0;
+    font-size: 1.2rem;
+  }
+
+  .product-card__actions {
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .btn--primary {
+    width: 100%;
+    background: #6F2FE0;
+    color: white;
+  }
+
+  .btn--primary:hover {
+    background: #5A1FBF;
+  }
+
+  .btn--secondary {
+    background: #FFB6D9;
+    color: #3B1F7F;
+  }
+
+  .btn--secondary:hover {
+    background: #FF99D0;
+  }
+
+  .collection-anime__promo {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .collection-anime__promo h2 {
+    font-size: 1.8rem;
+  }
+
+  .collection-anime__promo p {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .newsletter-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid #FFB6D9;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    max-width: 300px;
+  }
+
+  .newsletter-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  @media (max-width: 768px) {
+    .collection-anime__title {
+      font-size: 1.8rem;
+    }
+
+    .collection__grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .categories-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

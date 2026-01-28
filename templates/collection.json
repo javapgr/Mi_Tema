@@ -1,9 +1,28 @@
 {
   "sections": {
+    "marquee": {
+      "type": "marquee-banner",
+      "settings": {
+        "text": "✨ EXPLORA TODAS NUESTRAS COLECCIONES",
+        "icon": "🛍️",
+        "duration": 20,
+        "background_color": "#1a1a1a",
+        "background_color_end": "#2d0000"
+      }
+    },
+    "hero": {
+      "type": "hero-banner",
+      "settings": {
+        "subtitle": "Encuentra todo lo que amas",
+        "title": "Todas las Colecciones",
+        "description": "Descubre nuestra amplia variedad de productos en todas las categorías",
+        "background_color": "#0D503C"
+      }
+    },
     "main": {
       "type": "main-collection",
       "settings": {}
     }
   },
-  "order": ["main"]
+  "order": ["marquee", "hero", "main"]
 }

@@ -1,0 +1,374 @@
+<!-- Sección Personalizada: Colección de Música -->
+<section class="collection-musica section">
+  <div class="container">
+    <!-- Header Personalizado para Música -->
+    <div class="collection-musica__header">
+      <div class="collection-musica__badge">🎵 MÚSICA</div>
+      <h1 class="collection-musica__title">Colección de Música</h1>
+      <p class="collection-musica__subtitle">Los mejores artistas del mundo</p>
+      <p class="collection-musica__description">
+        Encuentra mercancía exclusiva de tus artistas favoritos. Desde camisetas hasta accesorios, vive la música.
+      </p>
+    </div>
+
+    <!-- Categorías de Música (Subcategorías) -->
+    <div class="collection-musica__categories">
+      <div class="categories-grid">
+        <div class="category-card">
+          <div class="category-card__icon">🎤</div>
+          <h3 class="category-card__title">Pop & Rock</h3>
+          <p class="category-card__count">{{ collection.products_count }} productos</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🎸</div>
+          <h3 class="category-card__title">Indie</h3>
+          <p class="category-card__count">Última tendencia</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🎹</div>
+          <h3 class="category-card__title">Electrónica</h3>
+          <p class="category-card__count">Para vibes</p>
+        </div>
+        <div class="category-card">
+          <div class="category-card__icon">🎧</div>
+          <h3 class="category-card__title">Hip-Hop/Rap</h3>
+          <p class="category-card__count">Ritmo puro</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar (Filtros y Ordenar) -->
+    <div class="collection__toolbar">
+      <div class="collection__sort">
+        <label for="sort-by-musica">Ordenar por:</label>
+        <select id="sort-by-musica" class="collection__sort-select">
+          <option value="manual">Destacados</option>
+          <option value="best-selling">Más vendidos</option>
+          <option value="price-ascending">Precio: Menor a Mayor</option>
+          <option value="price-descending">Precio: Mayor a Menor</option>
+          <option value="created-descending">Más recientes</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid de Productos de Música -->
+    <div class="collection__grid grid grid--4">
+      {% for product in collection.products %}
+        <article class="product-card product-card--musica">
+          <a href="{{ product.url }}" class="product-card__link">
+            <div class="product-card__image-wrapper">
+              {% if product.featured_image %}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 400 }}"
+                  srcset="{{ product.featured_image | image_url: width: 300 }} 300w,
+                          {{ product.featured_image | image_url: width: 400 }} 400w,
+                          {{ product.featured_image | image_url: width: 600 }} 600w"
+                  sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 25vw"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="product-card__image"
+                  loading="lazy"
+                >
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'product-card__image placeholder' }}
+              {% endif %}
+            </div>
+            <div class="product-card__content">
+              <h3 class="product-card__title">{{ product.title }}</h3>
+              <div class="product-card__price">
+                {% if product.compare_at_price %}
+                  <span class="price price--old">{{ product.compare_at_price | money }}</span>
+                {% endif %}
+                <span class="price price--new">{{ product.price | money }}</span>
+              </div>
+              {% if product.rating %}
+                <div class="product-card__rating">
+                  <span class="rating">★★★★★ ({{ product.reviews_count }})</span>
+                </div>
+              {% endif %}
+            </div>
+          </a>
+          <div class="product-card__actions">
+            <button class="btn btn--primary btn--small" data-product-id="{{ product.id }}">
+              Agregar al carrito
+            </button>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <!-- CTA Section -->
+    <div class="collection-musica__cta">
+      <h2>¿No encontraste lo que buscas?</h2>
+      <p>Síguenos en nuestras redes sociales para conocer los estrenos más recientes</p>
+      <div class="social-links">
+        <a href="#" class="social-link">Instagram</a>
+        <a href="#" class="social-link">TikTok</a>
+        <a href="#" class="social-link">Twitter</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .collection-musica {
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #0D503C 0%, #1a3a2f 100%);
+    color: white;
+  }
+
+  .collection-musica__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .collection-musica__badge {
+    display: inline-block;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+  }
+
+  .collection-musica__title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .collection-musica__subtitle {
+    font-size: 1.3rem;
+    color: #10B981;
+    margin-bottom: 1rem;
+  }
+
+  .collection-musica__description {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .collection-musica__categories {
+    margin-bottom: 3rem;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .category-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .category-card:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10B981;
+    transform: translateY(-5px);
+  }
+
+  .category-card__icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-card__title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .category-card__count {
+    font-size: 0.9rem;
+    color: #10B981;
+  }
+
+  .collection__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+  }
+
+  .collection__sort-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    cursor: pointer;
+  }
+
+  .collection__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .product-card {
+    background: white;
+    color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .product-card__link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .product-card__image-wrapper {
+    overflow: hidden;
+    height: 250px;
+  }
+
+  .product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .product-card:hover .product-card__image {
+    transform: scale(1.05);
+  }
+
+  .product-card__content {
+    padding: 1.5rem;
+  }
+
+  .product-card__title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .product-card__price {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .price {
+    font-weight: bold;
+  }
+
+  .price--old {
+    text-decoration: line-through;
+    color: #999;
+  }
+
+  .price--new {
+    color: #10B981;
+    font-size: 1.2rem;
+  }
+
+  .product-card__rating {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+
+  .product-card__actions {
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: #10B981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+
+  .btn:hover {
+    background: #0D9970;
+  }
+
+  .collection-musica__cta {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+  }
+
+  .collection-musica__cta h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .collection-musica__cta p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    padding: 0.75rem 1.5rem;
+    background: #10B981;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+  }
+
+  .social-link:hover {
+    background: #0D9970;
+  }
+
+  @media (max-width: 768px) {
+    .collection-musica__title {
+      font-size: 1.8rem;
+    }
+
+    .collection__grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .categories-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+  }
+</style>
+
+<script>
+  // Agregar funcionalidad de carrito
+  document.addEventListener('DOMContentLoaded', function() {
+    const addToCartButtons = document.querySelectorAll('[data-product-id]');
+    
+    addToCartButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        // Aquí integrarías la lógica de agregar al carrito
+        console.log('Producto ' + productId + ' agregado al carrito');
+      });
+    });
+  });
+</script>

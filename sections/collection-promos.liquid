@@ -1,0 +1,541 @@
+<!-- Sección Personalizada: Colección de Promos 🔥 -->
+<section class="collection-promos section">
+  <div class="container">
+    <!-- Header Personalizado para Promos -->
+    <div class="collection-promos__header">
+      <div class="collection-promos__badge">🔥 MEGA OFERTAS</div>
+      <h1 class="collection-promos__title">Promos 🔥 Quema tu carrito</h1>
+      <p class="collection-promos__subtitle">¡Ofertas por tiempo limitado!</p>
+      <p class="collection-promos__description">
+        Descuentos increíbles en todos tus favoritos. ¡Date prisa, el stock es limitado!
+      </p>
+      <!-- Countdown Timer -->
+      <div class="countdown-timer" id="countdown">
+        <div class="countdown-item">
+          <span class="countdown-value" id="days">00</span>
+          <span class="countdown-label">Días</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="hours">00</span>
+          <span class="countdown-label">Horas</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="minutes">00</span>
+          <span class="countdown-label">Minutos</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="seconds">00</span>
+          <span class="countdown-label">Segundos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categorías de Promos -->
+    <div class="collection-promos__categories">
+      <div class="promo-banner">
+        <div class="promo-banner__content">
+          <span class="promo-banner__discount">-50%</span>
+          <h3>En toda la colección de música</h3>
+          <p>Usa código: MUSICA50</p>
+        </div>
+      </div>
+      <div class="promo-banner">
+        <div class="promo-banner__content">
+          <span class="promo-banner__discount">-40%</span>
+          <h3>En deportes favoritos</h3>
+          <p>Usa código: DEPO40</p>
+        </div>
+      </div>
+      <div class="promo-banner">
+        <div class="promo-banner__content">
+          <span class="promo-banner__discount">-30%</span>
+          <h3>Paquetes de anime</h3>
+          <p>Usa código: ANIME30</p>
+        </div>
+      </div>
+      <div class="promo-banner">
+        <div class="promo-banner__content">
+          <span class="promo-banner__discount">-25%</span>
+          <h3>Videojuegos en promoción</h3>
+          <p>Usa código: GAME25</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="collection__toolbar">
+      <div class="collection__sort">
+        <label for="sort-by-promos">Ordenar por:</label>
+        <select id="sort-by-promos" class="collection__sort-select">
+          <option value="manual">Mayor descuento</option>
+          <option value="best-selling">Más vendidos</option>
+          <option value="price-ascending">Precio: Menor a Mayor</option>
+          <option value="price-descending">Precio: Mayor a Menor</option>
+          <option value="created-descending">Más recientes</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid de Productos con Badges de Descuento -->
+    <div class="collection__grid grid grid--4">
+      {% for product in collection.products %}
+        <article class="product-card product-card--promos">
+          {% if product.compare_at_price > product.price %}
+            <div class="product-card__discount-badge">
+              -{{ (((product.compare_at_price | minus: product.price) | divided_by: product.compare_at_price | times: 100) | round) }}%
+            </div>
+          {% endif %}
+          <a href="{{ product.url }}" class="product-card__link">
+            <div class="product-card__image-wrapper">
+              {% if product.featured_image %}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 400 }}"
+                  srcset="{{ product.featured_image | image_url: width: 300 }} 300w,
+                          {{ product.featured_image | image_url: width: 400 }} 400w,
+                          {{ product.featured_image | image_url: width: 600 }} 600w"
+                  sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 25vw"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="product-card__image"
+                  loading="lazy"
+                >
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'product-card__image placeholder' }}
+              {% endif %}
+            </div>
+            <div class="product-card__content">
+              <h3 class="product-card__title">{{ product.title }}</h3>
+              <div class="product-card__price">
+                {% if product.compare_at_price %}
+                  <span class="price price--old">{{ product.compare_at_price | money }}</span>
+                {% endif %}
+                <span class="price price--new">{{ product.price | money }}</span>
+              </div>
+              <p class="product-card__savings">
+                Ahorras: {{ product.compare_at_price | minus: product.price | money }}
+              </p>
+            </div>
+          </a>
+          <div class="product-card__actions">
+            <button class="btn btn--primary btn--small" data-product-id="{{ product.id }}">
+              ¡COMPRAR AHORA!
+            </button>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <!-- Final CTA -->
+    <div class="collection-promos__final-cta">
+      <h2>¡Aprovecha estas ofertas!</h2>
+      <p>Stock limitado, ¡no esperes más!</p>
+      <button class="btn btn--large">Ver más promociones</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .collection-promos {
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #4a0000 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated background */
+  .collection-promos::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
+    animation: pulse 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .collection-promos__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .collection-promos__badge {
+    display: inline-block;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 0, 0, 0.2);
+    border-radius: 50px;
+    color: #FF4444;
+    animation: pulse-badge 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .collection-promos__title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #FF6666;
+  }
+
+  .collection-promos__subtitle {
+    font-size: 1.3rem;
+    color: #FF9999;
+    margin-bottom: 1rem;
+  }
+
+  .collection-promos__description {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+
+  /* Countdown Timer */
+  .countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+  }
+
+  .countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 0, 0, 0.15);
+    border: 2px solid #FF4444;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    min-width: 90px;
+  }
+
+  .countdown-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #FF6666;
+  }
+
+  .countdown-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.5rem;
+  }
+
+  .collection-promos__categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .promo-banner {
+    background: linear-gradient(135deg, #FF4444 0%, #FF0000 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .promo-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(20px);
+    }
+  }
+
+  .promo-banner:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+  }
+
+  .promo-banner__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .promo-banner__discount {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .promo-banner h3 {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    color: white;
+  }
+
+  .promo-banner p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .collection__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+  }
+
+  .collection__sort-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #FF4444;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #FF6666;
+    cursor: pointer;
+  }
+
+  .collection__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .product-card {
+    background: white;
+    color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 3px solid transparent;
+    position: relative;
+  }
+
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(255, 0, 0, 0.3);
+    border-color: #FF4444;
+  }
+
+  .product-card__discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #FF0000;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+    animation: bounce 0.5s ease-in-out;
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  .product-card__image-wrapper {
+    overflow: hidden;
+    height: 250px;
+  }
+
+  .product-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .product-card:hover .product-card__image {
+    transform: scale(1.05);
+  }
+
+  .product-card__content {
+    padding: 1.5rem;
+  }
+
+  .product-card__title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .product-card__price {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .price {
+    font-weight: bold;
+  }
+
+  .price--old {
+    text-decoration: line-through;
+    color: #999;
+  }
+
+  .price--new {
+    color: #FF0000;
+    font-size: 1.2rem;
+  }
+
+  .product-card__savings {
+    font-size: 0.85rem;
+    color: #FF4444;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  .product-card__actions {
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: #FF0000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+  }
+
+  .btn:hover {
+    background: #CC0000;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+  }
+
+  .btn--large {
+    width: auto;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
+
+  .collection-promos__final-cta {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #FF4444;
+    border-radius: 12px;
+  }
+
+  .collection-promos__final-cta h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #FF6666;
+  }
+
+  .collection-promos__final-cta p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .collection-promos__title {
+      font-size: 1.8rem;
+    }
+
+    .countdown-timer {
+      gap: 1rem;
+    }
+
+    .countdown-item {
+      min-width: 70px;
+      padding: 0.75rem 1rem;
+    }
+
+    .countdown-value {
+      font-size: 1.5rem;
+    }
+
+    .collection__grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .collection-promos__categories {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Countdown Timer
+  function updateCountdown() {
+    // Fecha objetivo (puedes cambiar esta fecha)
+    const targetDate = new Date('2026-02-28T23:59:59').getTime();
+    
+    const timer = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      
+      if (distance < 0) {
+        clearInterval(timer);
+        document.getElementById('days').textContent = '00';
+        document.getElementById('hours').textContent = '00';
+        document.getElementById('minutes').textContent = '00';
+        document.getElementById('seconds').textContent = '00';
+        return;
+      }
+      
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }, 1000);
+  }
+  
+  document.addEventListener('DOMContentLoaded', updateCountdown);
+</script>
