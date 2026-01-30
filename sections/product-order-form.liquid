@@ -631,14 +631,29 @@
 
 <script>
 (function() {
+  // ==================== CONFIGURACIÓN INICIAL ====================
   const categoryMap = {
-    'novios': 'Novios Parejas', 'musica': 'Música', 'deportes': 'Deportes',
-    'animes': 'Animes', 'juegos': 'Juegos', 'peliculas-series': 'Peliculas-Series'
+    'novios': 'Novios Parejas', 
+    'musica': 'Música', 
+    'deportes': 'Deportes',
+    'animes': 'Animes', 
+    'juegos': 'Juegos', 
+    'peliculas-series': 'Películas-Series'
+  };
+
+  const categoryModels = {
+    'novios': ['Diseño Parejas Moderna', 'Diseño Parejas Vintage', 'Diseño Parejas Romántica'],
+    'musica': ['Anuel AA', 'Bad Bunny', 'J Balvin', 'Tainy', 'Karol G'],
+    'deportes': ['Messi', 'Cristiano Ronaldo', 'Neymar', 'Mbappe'],
+    'animes': ['Jujutsu Kaisen', 'Attack on Titan', 'One Piece', 'Naruto'],
+    'juegos': ['GTA', 'Fortnite', 'Minecraft', 'Call of Duty'],
+    'peliculas-series': ['Stranger Things', 'The Boys', 'Wednesday', 'Deadpool']
   };
 
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   const colors = ['Negro', 'Blanco', 'Gris', 'Rojo', 'Azul', 'Verde'];
-  
+
+  // ==================== FUNCIONES AUXILIARES ====================
   const getColorCode = (color) => {
     const colorMap = {
       'Negro': '#000000',
@@ -655,8 +670,26 @@
     return ['Blanco', 'Amarillo'].includes(color) ? '#000000' : '#FFFFFF';
   };
 
+  const detectCategory = () => {
+    const tags = '{{ product.tags | join: "," }}';
+    for (const [key, models] of Object.entries(categoryModels)) {
+      if (tags.toLowerCase().includes(key)) return key;
+    }
+    return 'novios';
+  };
+
+  const calcularTotal = (items) => {
+    const precioBase = 39.90;
+    const total = items.reduce((sum, item) => sum + (precioBase * 1), 0);
+    return 'S/. ' + total.toFixed(2);
+  };
+
+  // ==================== SELECCIÓN DE ELEMENTOS DOM ====================
   const section = document.querySelector('[data-product-order-form]');
-  if (!section) return;
+  if (!section) {
+    console.error('Sección de formulario no encontrada');
+    return;
+  }
 
   const itemsContainer = section.querySelector('#formItems');
   const addBtn = section.querySelector('#addProductBtn');
@@ -665,6 +698,12 @@
   const mainImage = section.querySelector('.product-order-form__image');
   const thumbnails = section.querySelectorAll('.product-order-form__thumbnail');
 
+  if (!itemsContainer || !addBtn || !sendBtn || !summaryContent) {
+    console.error('Elementos del formulario no encontrados');
+    return;
+  }
+
+  // ==================== VARIABLES GLOBALES ====================
   const whatsappNumber = '{{ section.settings.whatsapp_number | default: "51987654321" }}';
   const currentProductTitle = '{{ product.title | escape }}';
   const currentProductImage = mainImage?.dataset.productImage || '';
@@ -673,12 +712,13 @@
   let cartData = [];
   const cartKey = 'isslam_cart_' + new Date().toISOString().split('T')[0];
 
-  // Cargar carrito guardado
+  // ==================== FUNCIONES DE CARRITO ====================
   const loadCart = () => {
     try {
       const saved = localStorage.getItem(cartKey);
       cartData = saved ? JSON.parse(saved) : [];
-    } catch {
+    } catch (e) {
+      console.error('Error loading cart:', e);
       cartData = [];
     }
   };
@@ -689,29 +729,6 @@
     } catch (e) {
       console.error('Error saving cart:', e);
     }
-  };
-
-  const detectCategory = () => {
-    const tags = '{{ product.tags | join: "," }}';
-    for (const [key, models] of Object.entries(categoryModels)) {
-      if (tags.toLowerCase().includes(key)) return key;
-    }
-    return 'novios';
-  };
-
-  const categoryModels = {
-    'novios': ['Diseño Parejas Moderna', 'Diseño Parejas Vintage', 'Diseño Parejas Romántica'],
-    'musica': ['Anuel AA', 'Bad Bunny', 'J Balvin', 'Tainy', 'Karol G'],
-    'deportes': ['Messi', 'Cristiano Ronaldo', 'Neymar', 'Mbappe'],
-    'animes': ['Jujutsu Kaisen', 'Attack on Titan', 'One Piece', 'Naruto'],
-    'juegos': ['GTA', 'Fortnite', 'Minecraft', 'Call of Duty'],
-    'peliculas-series': ['Stranger Things', 'The Boys', 'Wednesday', 'Deadpool']
-  };
-
-  const calcularTotal = (items) => {
-    const precioBase = 39.90;
-    const total = items.reduce((sum, item) => sum + (precioBase * 1), 0);
-    return 'S/. ' + total.toFixed(2);
   };
 
   const createCurrentProductItem = () => {
@@ -897,9 +914,21 @@
   };
 
   sendBtn.addEventListener('click', () => {
-    if (!window.isslam || !window.isslam.authSystem.currentUser) {
+    // Obtener usuario del localStorage
+    let currentUser = null;
+    try {
+      const userStr = localStorage.getItem('isslam_current_user');
+      currentUser = userStr ? JSON.parse(userStr) : null;
+    } catch (e) {
+      console.error('Error parsing user:', e);
+    }
+
+    if (!currentUser) {
       alert('Por favor inicia sesión para realizar tu pedido');
-      window.isslam.authSystem.openModal();
+      // Intentar abrir modal de autenticación si existe
+      if (window.isslam && window.isslam.authSystem) {
+        window.isslam.authSystem.openModal();
+      }
       return;
     }
 
@@ -914,7 +943,6 @@
       return;
     }
 
-    const currentUser = window.isslam.authSystem.currentUser;
     const itemsList = cartData.map(item => {
       return `- [${categoryMap[item.category]}] ${item.model} / ${item.modelo} / Talla: ${item.size} / Color: ${item.color}`;
     }).join('%0A');
@@ -924,24 +952,27 @@
 
     const orden = {
       id: Date.now(),
-      usuario: currentUser.name,
-      email: currentUser.email,
-      telefono: currentUser.phone,
+      usuario: currentUser.name || 'Usuario',
+      email: currentUser.email || '',
+      telefono: currentUser.phone || '',
       fecha: new Date().toLocaleString(),
       items: cartData,
       total: calcularTotal(cartData)
     };
 
     // Guardar orden en el usuario
-    const users = JSON.parse(localStorage.getItem('isslam_users') || '{}');
-    if (users[currentUser.facebookId || currentUser.email]) {
-      const key = currentUser.facebookId || currentUser.email;
+    try {
+      const users = JSON.parse(localStorage.getItem('isslam_users') || '{}');
+      const key = currentUser.facebookId || currentUser.email || 'guest';
+      if (!users[key]) users[key] = { orders: [] };
       users[key].orders = users[key].orders || [];
       users[key].orders.push(orden);
       localStorage.setItem('isslam_users', JSON.stringify(users));
+    } catch (e) {
+      console.error('Error saving order:', e);
     }
 
-    const mensaje = `¡Hola ISSLAM! Soy ${currentUser.name}%0A%0AQuiero estos productos:%0A%0A${itemsList}${photoText}%0A%0ATotal: ${orden.total}%0A¿Cuál es el proceso de pago?`;
+    const mensaje = `¡Hola ISSLAM! Soy ${currentUser.name || 'Cliente'}%0A%0AQuiero estos productos:%0A%0A${itemsList}${photoText}%0A%0ATotal: ${orden.total}%0A¿Cuál es el proceso de pago?`;
     const urlWhatsapp = `https://wa.me/${whatsappNumber}?text=${mensaje}`;
     
     // Limpiar carrito después de enviar
