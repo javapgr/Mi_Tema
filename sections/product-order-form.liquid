@@ -1,0 +1,1030 @@
+<!-- Formulario de Pedido en Página de Producto -->
+<section class="product-order-form section" data-product-order-form>
+  <div class="container">
+    <!-- Modal de Autenticación -->
+    <div class="product-order-form__modal" id="authModal">
+      <div class="product-order-form__modal-content" style="max-width: 400px;">
+        <div class="product-order-form__modal-header">
+          <h2>Mi Cuenta</h2>
+          <button type="button" class="product-order-form__modal-close" id="closeAuthModal">×</button>
+        </div>
+        <div id="authContent" style="padding: 2rem;">
+          <!-- Se genera dinámicamente -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para buscar productos -->
+    <div class="product-order-form__modal" id="productSearchModal">
+      <div class="product-order-form__modal-content">
+        <div class="product-order-form__modal-header">
+          <h2>Buscar otro producto</h2>
+          <button type="button" class="product-order-form__modal-close" id="closeProductSearch">×</button>
+        </div>
+        <div class="product-order-form__modal-search">
+          <input type="text" id="productSearchInput" placeholder="Busca por nombre o categoría..." class="product-order-form__input">
+        </div>
+        <div class="product-order-form__modal-results" id="productSearchResults">
+          <!-- Se genera dinámicamente -->
+        </div>
+      </div>
+    </div>
+
+    <div class="product-order-form__wrapper">
+      <!-- Galería de imágenes -->
+      <div class="product-order-form__gallery">
+        <div class="product-order-form__main-image">
+          {% if product.featured_image %}
+            <img 
+              src="{{ product.featured_image | image_url: width: 800 }}"
+              alt="{{ product.featured_image.alt | escape }}"
+              class="product-order-form__image"
+              loading="eager"
+              data-product-image="{{ product.featured_image | image_url: width: 800 }}"
+            >
+          {% else %}
+            {{ 'product-1' | placeholder_svg_tag: 'product-order-form__image placeholder' }}
+          {% endif %}
+        </div>
+        
+        {% if product.images.size > 1 %}
+          <div class="product-order-form__thumbnails">
+            {% for image in product.images %}
+              <button type="button" class="product-order-form__thumbnail {% if forloop.first %}is-active{% endif %}" data-image-id="{{ image.id }}" data-image-url="{{ image | image_url: width: 1200 }}" data-image-alt="{{ image.alt | escape }}">
+                <img 
+                  src="{{ image | image_url: width: 150 }}"
+                  alt="{{ image.alt | escape }}"
+                  loading="lazy"
+                >
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Formulario de Pedido -->
+      <div class="product-order-form__form">
+        <h1 class="product-order-form__title">{{ product.title }}</h1>
+        <p class="product-order-form__price">{{ product.selected_or_first_available_variant.price | money }}</p>
+
+        <div class="product-order-form__items" id="formItems">
+          <!-- Se genera dinámicamente -->
+        </div>
+
+        <!-- Botón para agregar más items -->
+        <button type="button" class="product-order-form__add-btn" id="addProductBtn" title="Agregar otro producto">
+          <i class="fas fa-plus"></i> Agregar producto
+        </button>
+
+        <!-- Resumen -->
+        <div class="product-order-form__summary">
+          <h3>Resumen del Pedido</h3>
+          <div id="formSummaryContent" class="product-order-form__summary-content">
+            <p class="product-order-form__summary-empty">Completa al menos una prenda</p>
+          </div>
+        </div>
+
+        <!-- Botón WhatsApp -->
+        <button type="button" id="formSendWhatsappBtn" class="btn btn--primary product-order-form__whatsapp-btn" disabled>
+          <i class="bi bi-whatsapp"></i>
+          Enviar por WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .product-order-form {
+    padding: 4rem 0;
+  }
+
+  .product-order-form__wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .product-order-form__gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .product-order-form__main-image {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background-color: #f5f5f5;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-order-form__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-order-form__thumbnails {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .product-order-form__thumbnail {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    background: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .product-order-form__thumbnail.is-active,
+  .product-order-form__thumbnail:hover {
+    border-color: var(--color-primary);
+  }
+
+  .product-order-form__thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-order-form__title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-order-form__price {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+  }
+
+  .product-order-form__form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-order-form__items {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .product-order-form__item {
+    background: #f9fafb;
+    border: 2px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .product-order-form__item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .product-order-form__item-number {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .product-order-form__item-remove {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .product-order-form__item-remove:hover {
+    background: #dc2626;
+  }
+
+  .product-order-form__field {
+    margin-bottom: 1rem;
+  }
+
+  .product-order-form__label {
+    display: block;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .product-order-form__button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .product-order-form__size-btn,
+  .product-order-form__color-btn {
+    padding: 0.8rem 1.2rem;
+    border: 2px solid #e5e5e5;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 60px;
+  }
+
+  .product-order-form__size-btn:hover {
+    border-color: var(--color-primary);
+  }
+
+  .product-order-form__size-btn.is-selected {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+
+  .product-order-form__color-btn {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    overflow: hidden;
+    text-indent: -9999px;
+  }
+
+  .product-order-form__color-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .product-order-form__color-btn.is-selected {
+    border-color: #333;
+    border-width: 3px;
+  }
+
+  .product-order-form__select,
+  .product-order-form__input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+  }
+
+  .product-order-form__select:focus,
+  .product-order-form__input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  .product-order-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .product-order-form__add-btn {
+    width: 100%;
+    padding: 1.6rem 1.4rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(145deg, #6366f1, #4f46e5);
+    border: none;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3), 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transform: translateY(0);
+  }
+
+  .product-order-form__add-btn:hover {
+    background: linear-gradient(145deg, #4f46e5, #4338ca);
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.4), 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .product-order-form__add-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-order-form__add-btn i {
+    font-size: 1.5rem;
+  }
+
+  .product-order-form__summary {
+    background: #fff;
+    border: 2px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .product-order-form__summary h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .product-order-form__summary-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .product-order-form__summary-item {
+    padding: 0.8rem;
+    background: #f9fafb;
+    border-left: 4px solid var(--color-primary);
+    border-radius: 4px;
+    font-size: 1.3rem;
+    position: relative;
+  }
+
+  .product-order-form__summary-remove {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 0;
+    flex-shrink: 0;
+    margin-left: 0.8rem;
+  }
+
+  .product-order-form__summary-remove:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+  }
+
+  .product-order-form__summary-empty {
+    color: var(--color-text-light);
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .product-order-form__whatsapp-btn {
+    width: 100%;
+    padding: 1.8rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(145deg, #25d366, #20ba58);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    border: none;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 16px rgba(37, 211, 102, 0.35), 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transform: translateY(0);
+  }
+
+  .product-order-form__whatsapp-btn svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .product-order-form__whatsapp-btn i {
+    font-size: 2rem;
+  }
+
+  .product-order-form__whatsapp-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, #20ba58, #1a9144);
+    box-shadow: 0 12px 24px rgba(37, 211, 102, 0.45), 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .product-order-form__whatsapp-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(37, 211, 102, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-order-form__whatsapp-btn:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Estilos para botones de autenticación */
+  .auth-btn {
+    width: 100%;
+    padding: 1.2rem 1.4rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .auth-btn--facebook {
+    background: linear-gradient(145deg, #1877f2, #0a66c2);
+  }
+
+  .auth-btn--facebook:hover {
+    background: linear-gradient(145deg, #0a66c2, #084298);
+    box-shadow: 0 6px 12px rgba(8, 66, 152, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .auth-btn--google {
+    background: linear-gradient(145deg, #ea4335, #c5221f);
+  }
+
+  .auth-btn--google:hover {
+    background: linear-gradient(145deg, #c5221f, #a50e0e);
+    box-shadow: 0 6px 12px rgba(165, 14, 14, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .auth-btn i {
+    font-size: 1.4rem;
+  }
+
+  @media (max-width: 1024px) {
+    .product-order-form__wrapper {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .product-order-form__modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 2rem 1rem;
+  }
+
+  .product-order-form__modal.is-open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-order-form__modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+  }
+
+  .product-order-form__modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 2px solid #e5e5e5;
+    position: sticky;
+    top: 0;
+    background: white;
+  }
+
+  .product-order-form__modal-header h2 {
+    font-size: 1.8rem;
+    margin: 0;
+  }
+
+  .product-order-form__modal-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #f5f5f5;
+    border-radius: 50%;
+    font-size: 2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .product-order-form__modal-close:hover {
+    background: #e5e5e5;
+  }
+
+  .product-order-form__modal-search {
+    padding: 1.5rem;
+    border-bottom: 2px solid #e5e5e5;
+  }
+
+  .product-order-form__modal-results {
+    padding: 1.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .product-order-form__product-card {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .product-order-form__product-card:hover {
+    border-color: var(--color-primary);
+    background: #f9fafb;
+  }
+
+  .product-order-form__product-card-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f5f5f5;
+  }
+
+  .product-order-form__product-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-order-form__product-card-info {
+    flex: 1;
+  }
+
+  .product-order-form__product-card-title {
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .product-order-form__product-card-category {
+    font-size: 1.1rem;
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .product-order-form__title {
+      font-size: 2rem;
+    }
+
+    .product-order-form__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+(function() {
+  const categoryMap = {
+    'novios': 'Novios Parejas', 'musica': 'Música', 'deportes': 'Deportes',
+    'animes': 'Animes', 'juegos': 'Juegos', 'peliculas-series': 'Peliculas-Series'
+  };
+
+  const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  const colors = ['Negro', 'Blanco', 'Gris', 'Rojo', 'Azul', 'Verde'];
+  
+  const getColorCode = (color) => {
+    const colorMap = {
+      'Negro': '#000000',
+      'Blanco': '#FFFFFF',
+      'Gris': '#808080',
+      'Rojo': '#FF0000',
+      'Azul': '#0000FF',
+      'Verde': '#00AA00'
+    };
+    return colorMap[color] || '#CCCCCC';
+  };
+
+  const getTextColorForBg = (color) => {
+    return ['Blanco', 'Amarillo'].includes(color) ? '#000000' : '#FFFFFF';
+  };
+
+  const section = document.querySelector('[data-product-order-form]');
+  if (!section) return;
+
+  const itemsContainer = section.querySelector('#formItems');
+  const addBtn = section.querySelector('#addProductBtn');
+  const sendBtn = section.querySelector('#formSendWhatsappBtn');
+  const summaryContent = section.querySelector('#formSummaryContent');
+  const mainImage = section.querySelector('.product-order-form__image');
+  const thumbnails = section.querySelectorAll('.product-order-form__thumbnail');
+
+  const whatsappNumber = '{{ section.settings.whatsapp_number | default: "51987654321" }}';
+  const currentProductTitle = '{{ product.title | escape }}';
+  const currentProductImage = mainImage?.dataset.productImage || '';
+  const currentProductHandle = '{{ product.handle }}';
+
+  let cartData = [];
+  const cartKey = 'isslam_cart_' + new Date().toISOString().split('T')[0];
+
+  // Cargar carrito guardado
+  const loadCart = () => {
+    try {
+      const saved = localStorage.getItem(cartKey);
+      cartData = saved ? JSON.parse(saved) : [];
+    } catch {
+      cartData = [];
+    }
+  };
+
+  const saveCart = () => {
+    try {
+      localStorage.setItem(cartKey, JSON.stringify(cartData));
+    } catch (e) {
+      console.error('Error saving cart:', e);
+    }
+  };
+
+  const detectCategory = () => {
+    const tags = '{{ product.tags | join: "," }}';
+    for (const [key, models] of Object.entries(categoryModels)) {
+      if (tags.toLowerCase().includes(key)) return key;
+    }
+    return 'novios';
+  };
+
+  const categoryModels = {
+    'novios': ['Diseño Parejas Moderna', 'Diseño Parejas Vintage', 'Diseño Parejas Romántica'],
+    'musica': ['Anuel AA', 'Bad Bunny', 'J Balvin', 'Tainy', 'Karol G'],
+    'deportes': ['Messi', 'Cristiano Ronaldo', 'Neymar', 'Mbappe'],
+    'animes': ['Jujutsu Kaisen', 'Attack on Titan', 'One Piece', 'Naruto'],
+    'juegos': ['GTA', 'Fortnite', 'Minecraft', 'Call of Duty'],
+    'peliculas-series': ['Stranger Things', 'The Boys', 'Wednesday', 'Deadpool']
+  };
+
+  const calcularTotal = (items) => {
+    const precioBase = 39.90;
+    const total = items.reduce((sum, item) => sum + (precioBase * 1), 0);
+    return 'S/. ' + total.toFixed(2);
+  };
+
+  const createCurrentProductItem = () => {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'product-order-form__item';
+    itemDiv.dataset.itemIndex = 0;
+    itemDiv.dataset.productImage = currentProductImage;
+    itemDiv.dataset.productHandle = currentProductHandle;
+
+    const category = detectCategory();
+    const model = currentProductTitle;
+
+    itemDiv.innerHTML = `
+      <div class="product-order-form__item-header">
+        <span class="product-order-form__item-number">Prenda Actual</span>
+        <button type="button" class="product-order-form__item-remove" data-remove-item="0">×</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 80px 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <img src="${currentProductImage}" alt="Producto" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+        <div>
+          <p style="font-weight: 700; margin: 0 0 0.5rem 0; font-size: 1.3rem;">${model}</p>
+          <p style="margin: 0; color: #666; font-size: 1.2rem;">${categoryMap[category]}</p>
+        </div>
+      </div>
+
+      <div class="product-order-form__field">
+        <label class="product-order-form__label">Modelo</label>
+        <div class="product-order-form__button-group" data-field-group="modelo">
+          <button type="button" class="product-order-form__size-btn" data-modelo="REGULAR" data-field="modelo" data-index="0">REGULAR</button>
+          <button type="button" class="product-order-form__size-btn" data-modelo="OVERSIZE" data-field="modelo" data-index="0">OVERSIZE</button>
+        </div>
+      </div>
+
+      <div class="product-order-form__field">
+        <label class="product-order-form__label">Talla</label>
+        <div class="product-order-form__button-group" data-field-group="size">
+          ${sizes.map(s => `<button type="button" class="product-order-form__size-btn" data-size="${s}" data-field="size" data-index="0">${s}</button>`).join('')}
+        </div>
+      </div>
+
+      <div class="product-order-form__field">
+        <label class="product-order-form__label">Color</label>
+        <div class="product-order-form__button-group" data-field-group="color">
+          ${colors.map(c => `<button type="button" class="product-order-form__color-btn" data-color="${c}" data-field="color" data-index="0" style="background-color: ${getColorCode(c)}; color: ${getTextColorForBg(c)};">${c}</button>`).join('')}
+        </div>
+      </div>
+
+      <div class="product-order-form__field">
+        <label class="product-order-form__label">Cantidad</label>
+        <div style="padding: 1rem; background: #f5f5f5; border-radius: 8px; text-align: center;">
+          <span style="font-size: 1.8rem; font-weight: 700; color: var(--color-primary);">1</span>
+          <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 1.1rem;">Cantidad por producto</p>
+        </div>
+      </div>
+    `;
+
+    // Event listeners para botones de modelo
+    itemDiv.querySelectorAll('[data-field="modelo"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        itemDiv.querySelectorAll('[data-field="modelo"]').forEach(b => b.classList.remove('is-selected'));
+        btn.classList.add('is-selected');
+        updateItem(0, { modelo: btn.dataset.modelo });
+      });
+    });
+
+    // Event listeners para botones de talla
+    itemDiv.querySelectorAll('[data-field="size"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        itemDiv.querySelectorAll('[data-field="size"]').forEach(b => b.classList.remove('is-selected'));
+        btn.classList.add('is-selected');
+        updateItem(0, { size: btn.dataset.size });
+      });
+    });
+
+    // Event listeners para botones de color
+    itemDiv.querySelectorAll('[data-field="color"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        itemDiv.querySelectorAll('[data-field="color"]').forEach(b => b.classList.remove('is-selected'));
+        btn.classList.add('is-selected');
+        updateItem(0, { color: btn.dataset.color });
+      });
+    });
+
+    const removeBtn = itemDiv.querySelector('[data-remove-item]');
+    removeBtn.addEventListener('click', () => removeItem(0));
+
+    return itemDiv;
+  };
+
+  const updateItem = (index, updates) => {
+    const itemDiv = itemsContainer.querySelector(`[data-item-index="${index}"]`);
+    if (!itemDiv) return;
+
+    const productImage = itemDiv.dataset.productImage || '';
+    const productHandle = itemDiv.dataset.productHandle || '';
+
+    // Encontrar el item en el carrito actual o crear uno nuevo
+    let currentItem = cartData.find(i => i.handle === currentProductHandle);
+    if (!currentItem) {
+      currentItem = {
+        handle: currentProductHandle,
+        model: currentProductTitle,
+        category: detectCategory(),
+        image: productImage,
+        modelo: '',
+        size: '',
+        color: '',
+        quantity: 1
+      };
+      cartData.push(currentItem);
+    }
+
+    // Actualizar con los cambios
+    Object.assign(currentItem, updates);
+    saveCart();
+    updateSummary();
+  };
+
+  const updateSummary = () => {
+    // Mostrar todos los items del carrito + el item actual
+    const allItems = [...cartData];
+
+    if (allItems.length === 0) {
+      summaryContent.innerHTML = '<p class="product-order-form__summary-empty">Completa modelo, talla y color</p>';
+      sendBtn.disabled = true;
+    } else {
+      summaryContent.innerHTML = allItems.map((item, i) => {
+        const thumb = item.image ? `<img src="${item.image}" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover; margin-right: 0.5rem; display: inline-block;">` : '';
+        return `
+          <div class="product-order-form__summary-item" data-item-index="${i}">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="flex: 1;">${thumb}${item.model} / ${item.modelo} / Talla: ${item.size} / Color: ${item.color}</div>
+              <button type="button" class="product-order-form__summary-remove" data-remove-item="${i}" title="Eliminar producto">×</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // Agregar event listeners para botones de eliminar
+      summaryContent.querySelectorAll('.product-order-form__summary-remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const index = parseInt(btn.dataset.removeItem);
+          removeProductFromCart(index);
+        });
+      });
+      
+      const canSend = allItems.every(i => i.modelo && i.size && i.color);
+      sendBtn.disabled = !canSend;
+    }
+  };
+
+  const removeProductFromCart = (index) => {
+    if (confirm('¿Deseas eliminar este producto de tu pedido?')) {
+      cartData.splice(index, 1);
+      saveCart();
+      updateSummary();
+    }
+  };
+
+  const removeItem = (index) => {
+    const itemDiv = itemsContainer.querySelector(`[data-item-index="${index}"]`);
+    if (itemDiv) itemDiv.remove();
+    cartData = cartData.filter((_, i) => i !== index);
+    saveCart();
+    updateSummary();
+  };
+
+  const addProductToCart = () => {
+    // Verificar que el producto actual esté completo
+    const currentItem = cartData.find(i => i.handle === currentProductHandle);
+    if (!currentItem || !currentItem.modelo || !currentItem.size || !currentItem.color) {
+      alert('Por favor completa modelo, talla y color antes de agregar otro producto');
+      return;
+    }
+
+    // Ir al inicio/colecciones
+    window.location.href = '/';
+  };
+
+  sendBtn.addEventListener('click', () => {
+    if (!window.isslam || !window.isslam.authSystem.currentUser) {
+      alert('Por favor inicia sesión para realizar tu pedido');
+      window.isslam.authSystem.openModal();
+      return;
+    }
+
+    if (cartData.length === 0) {
+      alert('Por favor agrega productos a tu carrito');
+      return;
+    }
+
+    // Verificar que todos los items tengan modelo, talla y color
+    if (!cartData.every(i => i.modelo && i.size && i.color)) {
+      alert('Por favor completa modelo, talla y color en todos los productos');
+      return;
+    }
+
+    const currentUser = window.isslam.authSystem.currentUser;
+    const itemsList = cartData.map(item => {
+      return `- [${categoryMap[item.category]}] ${item.model} / ${item.modelo} / Talla: ${item.size} / Color: ${item.color}`;
+    }).join('%0A');
+
+    const imageUrls = cartData.filter(i => i.image).map(i => i.image).join('%0A');
+    const photoText = imageUrls ? `%0A%0A📸 Fotos:%0A${imageUrls}` : '';
+
+    const orden = {
+      id: Date.now(),
+      usuario: currentUser.name,
+      email: currentUser.email,
+      telefono: currentUser.phone,
+      fecha: new Date().toLocaleString(),
+      items: cartData,
+      total: calcularTotal(cartData)
+    };
+
+    // Guardar orden en el usuario
+    const users = JSON.parse(localStorage.getItem('isslam_users') || '{}');
+    if (users[currentUser.facebookId || currentUser.email]) {
+      const key = currentUser.facebookId || currentUser.email;
+      users[key].orders = users[key].orders || [];
+      users[key].orders.push(orden);
+      localStorage.setItem('isslam_users', JSON.stringify(users));
+    }
+
+    const mensaje = `¡Hola ISSLAM! Soy ${currentUser.name}%0A%0AQuiero estos productos:%0A%0A${itemsList}${photoText}%0A%0ATotal: ${orden.total}%0A¿Cuál es el proceso de pago?`;
+    const urlWhatsapp = `https://wa.me/${whatsappNumber}?text=${mensaje}`;
+    
+    // Limpiar carrito después de enviar
+    localStorage.removeItem(cartKey);
+    cartData = [];
+    window.open(urlWhatsapp, '_blank');
+  });
+
+  addBtn.addEventListener('click', addProductToCart);
+
+  thumbnails.forEach(thumbnail => {
+    thumbnail.addEventListener('click', () => {
+      const imageUrl = thumbnail.dataset.imageUrl;
+      if (imageUrl && mainImage) {
+        mainImage.src = imageUrl;
+        thumbnails.forEach(t => t.classList.remove('is-active'));
+        thumbnail.classList.add('is-active');
+      }
+    });
+  });
+
+  // Inicializar
+  loadCart();
+  const initialItem = createCurrentProductItem();
+  itemsContainer.appendChild(initialItem);
+  updateSummary();
+
+  // ====== AUTENTICACIÓN CON FACEBOOK Y GOOGLE ======
+  const fbLoginBtn = document.getElementById('fbLoginBtn');
+  const googleLoginBtn = document.getElementById('googleLoginBtn');
+  const authModal = document.getElementById('authModal');
+  const closeAuthModal = document.getElementById('closeAuthModal');
+
+  // Cerrar modal
+  closeAuthModal?.addEventListener('click', () => {
+    authModal.style.display = 'none';
+  });
+
+  // Login con Facebook
+  fbLoginBtn?.addEventListener('click', () => {
+    FB.login(function(response) {
+      if (response.authResponse) {
+        FB.api('/me', {fields: 'id,name,email,picture'}, function(user) {
+          const userData = {
+            id: user.id,
+            facebookId: user.id,
+            name: user.name,
+            email: user.email,
+            phone: '',
+            avatar: user.picture.data.url,
+            loginMethod: 'facebook',
+            orders: []
+          };
+          localStorage.setItem('isslam_current_user', JSON.stringify(userData));
+          authModal.style.display = 'none';
+          alert('Bienvenido ' + user.name);
+          location.reload();
+        });
+      }
+    }, {scope: 'public_profile,email'});
+  });
+
+  // Login con Google
+  googleLoginBtn?.addEventListener('click', () => {
+    // Para Google, necesitarías usar Google Sign-In SDK
+    // Por ahora mostramos un placeholder
+    alert('Google Login será implementado con Google Sign-In SDK. Por favor usa Facebook por ahora.');
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Pedido de Producto",
+  "tag": "section",
+  "class": "product-order-form-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "Número WhatsApp",
+      "default": "51987654321"
+    }
+  ]
+}
+{% endschema %}
