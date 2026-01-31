@@ -46,52 +46,30 @@
           {% endif %}
         </div>
 
-        {% form 'product', product, class: 'product__form' %}
-          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-          
-          {% unless product.has_only_default_variant %}
-            {% for option in product.options_with_values %}
-              {% assign option_index = forloop.index0 %}
-              <div class="product__option">
-                <label class="product__option-label">{{ option.name }}</label>
-                <div class="product__option-values">
-                  {% for value in option.values %}
-                    <button type="button" class="product__option-value {% if option.selected_value == value %}is-selected{% endif %}" data-option-index="{{ option_index }}" data-option-value="{{ value | escape }}">
-                      {{ value }}
-                    </button>
-                  {% endfor %}
-                </div>
-              </div>
-            {% endfor %}
-          {% endunless %}
-
-          <div class="product__form-inline">
-            <div class="product__quantity">
-              <label class="product__option-label">Cantidad</label>
-              <div class="product__quantity-selector">
-                <button type="button" class="product__quantity-btn" data-action="decrease">−</button>
-                <input type="number" name="quantity" value="1" min="1" class="product__quantity-input">
-                <button type="button" class="product__quantity-btn" data-action="increase">+</button>
-              </div>
-            </div>
-
-            <div class="product__option product__delivery-option">
-              <label class="product__option-label">Envío</label>
-              <div class="product__option-values">
-                <button type="button" class="product__option-value is-selected" data-delivery="normal" data-delivery-extra="0">Normal</button>
-                <button type="button" class="product__option-value" data-delivery="express" data-delivery-extra="1000">Express</button>
-              </div>
-              <input type="hidden" name="properties[Envío]" value="Normal">
-            </div>
-
-            <button type="button" class="btn btn--primary product__whatsapp-order" id="productWhatsappBtn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-9.746 9.798c0 2.734.732 5.41 2.124 7.738L2.883 22l8.26-2.673A9.87 9.87 0 0012.168 2c5.433 0 9.857 4.424 9.857 9.857 0 5.433-4.424 9.857-9.857 9.857z"/>
-              </svg>
-              Pedir por WhatsApp
-            </button>
+        <!-- SISTEMA DE CONFIGURACIÓN MÚLTIPLE DE PRENDAS -->
+        <div class="multi-product-configurator" data-configurator>
+          <div class="multi-product-items" data-items-container>
+            <!-- El contenedor para los bloques de prendas se genera dinámicamente -->
           </div>
-        {% endform %}
+
+          <button type="button" class="btn btn--secondary multi-product-add-btn" data-add-item>
+            + Agregar otra prenda a mi pedido
+          </button>
+
+          <div class="multi-product-summary">
+            <h3 class="multi-product-summary__title">📋 Resumen de tu Pedido</h3>
+            <div class="multi-product-summary__items" data-summary-items>
+              <!-- Se actualiza dinámicamente -->
+            </div>
+          </div>
+
+          <button type="button" class="btn btn--primary product__whatsapp-order" id="productWhatsappBtn" data-final-order>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-9.746 9.798c0 2.734.732 5.41 2.124 7.738L2.883 22l8.26-2.673A9.87 9.87 0 0012.168 2c5.433 0 9.857 4.424 9.857 9.857 0 5.433-4.424 9.857-9.857 9.857z"/>
+            </svg>
+            Enviar pedido a WhatsApp
+          </button>
+        </div>
 
         {% if product.description != blank %}
           <div class="product__description">
@@ -310,6 +288,183 @@
     background: #1fb855;
   }
 
+  /* Multi-Product Configurator Styles */
+  .multi-product-configurator {
+    margin-top: 3rem;
+  }
+
+  .multi-product-items {
+    margin-bottom: 2rem;
+  }
+
+  .multi-product-item {
+    background-color: #f5f5f5;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .multi-product-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e5e5;
+  }
+
+  .multi-product-item__title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .multi-product-item__remove {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .multi-product-item__remove:hover {
+    background-color: #dc2626;
+  }
+
+  .multi-product-field {
+    margin-bottom: 1.5rem;
+  }
+
+  .multi-product-field__label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .multi-product-field__select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+  }
+
+  .multi-product-field__select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  .multi-product-field__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .multi-product-button {
+    padding: 1rem 1.5rem;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .multi-product-button:hover,
+  .multi-product-button.is-selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  .multi-product-quantity {
+    display: inline-flex;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 0.8rem;
+  }
+
+  .multi-product-quantity__btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .multi-product-quantity__btn:hover {
+    background-color: #e5e5e5;
+  }
+
+  .multi-product-quantity__input {
+    width: 60px;
+    text-align: center;
+    border: none;
+    font-size: 1.4rem;
+    font-weight: 600;
+    -moz-appearance: textfield;
+  }
+
+  .multi-product-quantity__input::-webkit-outer-spin-button,
+  .multi-product-quantity__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .multi-product-add-btn {
+    width: 100%;
+    padding: 1.2rem;
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    background-color: #6366f1;
+  }
+
+  .multi-product-add-btn:hover {
+    background-color: #4f46e5;
+  }
+
+  .multi-product-summary {
+    background-color: #f0f9ff;
+    border: 2px solid #93c5fd;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .multi-product-summary__title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .multi-product-summary__items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .multi-product-summary__item {
+    padding: 0.8rem;
+    background-color: white;
+    border-left: 4px solid var(--color-primary);
+    border-radius: 4px;
+    font-size: 1.2rem;
+  }
+
   .product__description {
     padding-top: 3rem;
     border-top: 1px solid #e5e5e5;
@@ -320,7 +475,7 @@
     margin-bottom: 1.5rem;
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 768px) {
     .product__wrapper {
       grid-template-columns: 1fr;
       gap: 3rem;
@@ -328,6 +483,21 @@
 
     .product__gallery {
       position: static;
+    }
+
+    .multi-product-item {
+      padding: 1.5rem;
+    }
+
+    .multi-product-field__buttons {
+      gap: 0.5rem;
+    }
+
+    .multi-product-button {
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+      flex: 1;
+      min-width: 70px;
     }
   }
 
@@ -340,132 +510,261 @@
     .product__whatsapp-order {
       min-width: 100%;
     }
+
+    .multi-product-item__header {
+      flex-direction: column;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+
+    .multi-product-item__remove {
+      width: 100%;
+    }
+
+    .multi-product-button {
+      flex: 1;
+      min-width: 60px;
+    }
   }
 </style>
 
 <script>
   (function() {
-    const section = document.querySelector('[data-product-section-id="{{ section.id }}"]');
-    if (!section) return;
-
-    const form = section.querySelector('form');
-    if (!form) return;
-
-    const variantInput = form.querySelector('input[name="id"]');
-    if (!variantInput) return;
-
-    const variants = {{ product.variants | json | replace: '<\/script>', '<\\/script>' }};
-    const optionsCount = {{ product.options.size }};
-    const optionButtons = section.querySelectorAll('.product__option-value:not([data-delivery])');
-    const quantityInput = section.querySelector('.product__quantity-input');
-    const quantityButtons = section.querySelectorAll('.product__quantity-btn[data-action]');
-    const thumbnails = section.querySelectorAll('.product__thumbnail');
-    const mainImage = section.querySelector('.product__main-image img');
-
-    const whatsappBtn = section.querySelector('#productWhatsappBtn');
-    const deliveryButtons = section.querySelectorAll('[data-delivery]');
-    const deliveryInput = form.querySelector('input[name="properties[Envío]"]');
-
-    const whatsappNumber = '{{ section.settings.whatsapp_number | default: settings.social_whatsapp | default: "51987654321" }}';
-
-    let currentVariant = variants.find(variant => variant.id === Number(variantInput.value)) || variants[0];
-    const selectedOptions = Array.from({ length: optionsCount }, (_, index) => currentVariant ? currentVariant[`option${index + 1}`] : null);
-    let deliveryExtra = 'Normal';
-
-    const findMatchingVariant = () => {
-      return variants.find(variant => selectedOptions.every((value, index) => {
-        if (value === null || value === undefined) {
-          return true;
-        }
-        return variant[`option${index + 1}`] === value;
-      }));
+    // Datos de productos por categoría
+    const productsByCategory = {
+      'novios': ['Pareja 1', 'Pareja 2', 'Corazón Love', 'Matching Set'],
+      'musica': ['Anuel AA', 'Farruko', 'Bad Bunny', 'Karol G', 'reggaeton Mix'],
+      'deportes': ['Messi', 'Ronaldo', 'Neymar', 'Maradona', 'Pelé'],
+      'animes': ['Jujutsu Kaisen', 'Naruto', 'One Piece', 'Dragon Ball', 'Attack on Titan'],
+      'juegos': ['GTA', 'Fortnite', 'Minecraft', 'Elden Ring', 'Valorant'],
+      'peliculas': ['Stranger Things', 'Breaking Bad', 'The Office', 'Marvel', 'DC Comics']
     };
 
-    if (currentVariant) {
-      variantInput.value = currentVariant.id;
-    }
+    const categories = [
+      { value: 'novios', label: 'Novios - Parejas' },
+      { value: 'musica', label: 'Música' },
+      { value: 'deportes', label: 'Deportes' },
+      { value: 'animes', label: 'Animes' },
+      { value: 'juegos', label: 'Juegos' },
+      { value: 'peliculas', label: 'Películas & Series' }
+    ];
 
-    optionButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const optionIndex = Number(button.dataset.optionIndex);
-        const optionValue = button.dataset.optionValue;
-        if (Number.isNaN(optionIndex) || !optionValue) return;
+    const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    const colors = ['Negro', 'Blanco', 'Gris', 'Rojo', 'Azul', 'Verde'];
 
-        selectedOptions[optionIndex] = optionValue;
+    let itemsData = [];
+    let itemCounter = 0;
 
-        optionButtons.forEach(other => {
-          if (Number(other.dataset.optionIndex) === optionIndex) {
-            other.classList.remove('is-selected');
-          }
+    const configurator = document.querySelector('[data-configurator]');
+    const itemsContainer = configurator.querySelector('[data-items-container]');
+    const addBtn = configurator.querySelector('[data-add-item]');
+    const summaryContainer = configurator.querySelector('[data-summary-items]');
+    const whatsappBtn = configurator.querySelector('[data-final-order]');
+    const whatsappNumber = '{{ section.settings.whatsapp_number | default: settings.social_whatsapp | default: "51987654321" }}';
+
+    function createProductItem(index) {
+      const item = {
+        id: itemCounter++,
+        category: '',
+        design: '',
+        size: '',
+        color: '',
+        quantity: 1
+      };
+
+      const itemEl = document.createElement('div');
+      itemEl.className = 'multi-product-item';
+      itemEl.dataset.itemId = item.id;
+
+      itemEl.innerHTML = `
+        <div class="multi-product-item__header">
+          <h3 class="multi-product-item__title">Prenda ${index + 1}</h3>
+          <button type="button" class="multi-product-item__remove" data-remove-item>Eliminar</button>
+        </div>
+
+        <!-- Categoría -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Categoría *</label>
+          <select class="multi-product-field__select" data-category-select>
+            <option value="">-- Selecciona una categoría --</option>
+            ${categories.map(cat => `<option value="${cat.value}">${cat.label}</option>`).join('')}
+          </select>
+        </div>
+
+        <!-- Modelo/Diseño -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Modelo/Diseño *</label>
+          <select class="multi-product-field__select" data-design-select disabled>
+            <option value="">-- Selecciona primero una categoría --</option>
+          </select>
+        </div>
+
+        <!-- Talla -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Talla *</label>
+          <div class="multi-product-field__buttons">
+            ${sizes.map(size => `<button type="button" class="multi-product-button" data-size="${size}">${size}</button>`).join('')}
+          </div>
+        </div>
+
+        <!-- Color -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Color *</label>
+          <div class="multi-product-field__buttons">
+            ${colors.map(color => `<button type="button" class="multi-product-button" data-color="${color}">${color}</button>`).join('')}
+          </div>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Cantidad</label>
+          <div class="multi-product-quantity">
+            <button type="button" class="multi-product-quantity__btn" data-qty-decrease>−</button>
+            <input type="number" class="multi-product-quantity__input" value="1" min="1" data-qty-input>
+            <button type="button" class="multi-product-quantity__btn" data-qty-increase>+</button>
+          </div>
+        </div>
+      `;
+
+      itemsContainer.appendChild(itemEl);
+      itemsData.push(item);
+
+      // Event listeners
+      const categorySelect = itemEl.querySelector('[data-category-select]');
+      const designSelect = itemEl.querySelector('[data-design-select]');
+      const removeBtn = itemEl.querySelector('[data-remove-item]');
+      const sizeButtons = itemEl.querySelectorAll('[data-size]');
+      const colorButtons = itemEl.querySelectorAll('[data-color]');
+      const qtyInput = itemEl.querySelector('[data-qty-input]');
+      const qtyBtnDec = itemEl.querySelector('[data-qty-decrease]');
+      const qtyBtnInc = itemEl.querySelector('[data-qty-increase]');
+
+      categorySelect.addEventListener('change', (e) => {
+        item.category = e.target.value;
+        item.design = '';
+        
+        // Actualizar opciones de diseño
+        designSelect.innerHTML = '<option value="">-- Selecciona un diseño --</option>';
+        if (item.category && productsByCategory[item.category]) {
+          productsByCategory[item.category].forEach(design => {
+            const option = document.createElement('option');
+            option.value = design;
+            option.textContent = design;
+            designSelect.appendChild(option);
+          });
+          designSelect.disabled = false;
+        } else {
+          designSelect.disabled = true;
+        }
+        updateSummary();
+      });
+
+      designSelect.addEventListener('change', (e) => {
+        item.design = e.target.value;
+        updateSummary();
+      });
+
+      sizeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          sizeButtons.forEach(b => b.classList.remove('is-selected'));
+          btn.classList.add('is-selected');
+          item.size = btn.dataset.size;
+          updateSummary();
         });
-        button.classList.add('is-selected');
-
-        const matchedVariant = findMatchingVariant();
-        if (matchedVariant) {
-          currentVariant = matchedVariant;
-          variantInput.value = matchedVariant.id;
-        }
       });
-    });
 
-    quantityButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        if (!quantityInput) return;
-        let current = Number(quantityInput.value);
-        if (Number.isNaN(current) || current < 1) {
-          current = 1;
-        }
-
-        if (button.dataset.action === 'increase') {
-          quantityInput.value = current + 1;
-        } else if (button.dataset.action === 'decrease') {
-          quantityInput.value = Math.max(1, current - 1);
-        }
+      colorButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          colorButtons.forEach(b => b.classList.remove('is-selected'));
+          btn.classList.add('is-selected');
+          item.color = btn.dataset.color;
+          updateSummary();
+        });
       });
-    });
 
-    deliveryButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        deliveryButtons.forEach(other => other.classList.remove('is-selected'));
-        button.classList.add('is-selected');
-        deliveryExtra = button.dataset.delivery === 'express' ? 'Express' : 'Normal';
-        if (deliveryInput) {
-          deliveryInput.value = deliveryExtra + (button.dataset.delivery === 'express' ? ' (+S/. 10.00)' : '');
-        }
+      qtyBtnDec.addEventListener('click', () => {
+        item.quantity = Math.max(1, item.quantity - 1);
+        qtyInput.value = item.quantity;
+        updateSummary();
       });
-    });
 
-    thumbnails.forEach(thumbnail => {
-      thumbnail.addEventListener('click', () => {
-        const imageUrl = thumbnail.dataset.imageUrl;
-        const imageAlt = thumbnail.dataset.imageAlt || '';
-        if (imageUrl && mainImage) {
-          mainImage.src = imageUrl;
-          if (imageAlt) {
-            mainImage.alt = imageAlt;
-          }
-        }
-
-        thumbnails.forEach(entry => entry.classList.remove('is-active'));
-        thumbnail.classList.add('is-active');
+      qtyBtnInc.addEventListener('click', () => {
+        item.quantity++;
+        qtyInput.value = item.quantity;
+        updateSummary();
       });
-    });
 
-    // WhatsApp Order
-    if (whatsappBtn) {
-      whatsappBtn.addEventListener('click', () => {
-        const titulo = '{{ product.title | escape }}';
-        const opciones = selectedOptions.filter(o => o).join(', ');
-        const cantidad = quantityInput ? quantityInput.value : '1';
-        const envio = deliveryExtra;
-        const precio = '{{ product.selected_or_first_available_variant.price | money }}';
+      qtyInput.addEventListener('change', () => {
+        const value = parseInt(qtyInput.value);
+        item.quantity = isNaN(value) || value < 1 ? 1 : value;
+        qtyInput.value = item.quantity;
+        updateSummary();
+      });
 
-        const mensaje = `Hola ISSLAM, me gustaría realizar un pedido:%0A%0A📦 Producto: ${titulo}%0A🎨 Opciones: ${opciones}%0A📊 Cantidad: ${cantidad}%0A🚚 Envío: ${envio}%0A💰 Precio: ${precio}%0A%0A¿Cómo puedo realizar el pago?`;
+      removeBtn.addEventListener('click', () => {
+        itemEl.remove();
+        itemsData = itemsData.filter(i => i.id !== item.id);
+        updateItemNumbers();
+        updateSummary();
+      });
 
-        const urlWhatsapp = `https://wa.me/${whatsappNumber}?text=${mensaje}`;
-        window.open(urlWhatsapp, '_blank');
+      return item;
+    }
+
+    function updateItemNumbers() {
+      document.querySelectorAll('.multi-product-item__title').forEach((el, index) => {
+        el.textContent = `Prenda ${index + 1}`;
       });
     }
+
+    function updateSummary() {
+      summaryContainer.innerHTML = '';
+      
+      const validItems = itemsData.filter(item => item.category && item.design && item.size && item.color);
+      
+      if (validItems.length === 0) {
+        summaryContainer.innerHTML = '<p style="color: #6b7280; font-size: 1.2rem;">Aún no has configurado ninguna prenda</p>';
+        return;
+      }
+
+      validItems.forEach((item, index) => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'multi-product-summary__item';
+        itemEl.innerHTML = `
+          <strong>${index + 1}.</strong> ${item.quantity}x 
+          <span style="text-transform: capitalize; color: var(--color-primary); font-weight: 600;">${item.category}</span> 
+          ${item.design} / Talla: ${item.size} / Color: ${item.color}
+        `;
+        summaryContainer.appendChild(itemEl);
+      });
+    }
+
+    // Agregar primer item automáticamente
+    createProductItem(0);
+
+    // Botón para agregar más prendas
+    addBtn.addEventListener('click', () => {
+      createProductItem(itemsData.length);
+    });
+
+    // WhatsApp final order
+    whatsappBtn.addEventListener('click', () => {
+      const validItems = itemsData.filter(item => item.category && item.design && item.size && item.color);
+      
+      if (validItems.length === 0) {
+        alert('Por favor configura al menos una prenda');
+        return;
+      }
+
+      let message = '¡Hola ISSLAM! Quiero estos productos:%0A%0A';
+      validItems.forEach((item, index) => {
+        message += `${index + 1}. ${item.quantity}x ${item.category.toUpperCase()} ${item.design}%0A   Talla: ${item.size} | Color: ${item.color}%0A`;
+      });
+      message += '%0A¿Cómo puedo realizar el pago?';
+
+      const urlWhatsapp = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      window.open(urlWhatsapp, '_blank');
+    });
   })();
 </script>
 
