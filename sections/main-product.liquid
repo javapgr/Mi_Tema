@@ -561,6 +561,246 @@
     const summaryContainer = configurator.querySelector('[data-summary-items]');
     const whatsappBtn = configurator.querySelector('[data-final-order]');
     const whatsappNumber = '{{ section.settings.whatsapp_number | default: settings.social_whatsapp | default: "51987654321" }}';
+    const currentProductTitle = '{{ product.title | escape }}';
+
+    // Detectar categoría y diseño del producto actual
+    function detectProductCategoryAndDesign() {
+      const titleLower = currentProductTitle.toLowerCase();
+      
+      for (const [category, designs] of Object.entries(productsByCategory)) {
+        for (const design of designs) {
+          if (titleLower.includes(design.toLowerCase())) {
+            return { category, design };
+          }
+        }
+      }
+      
+      return { category: '', design: '' };
+    }
+
+    function createProductItem(index, autoFill = false) {
+      const { category: autoCategory, design: autoDesign } = autoFill ? detectProductCategoryAndDesign() : { category: '', design: '' };
+      
+      const item = {
+        id: itemCounter++,
+        category: autoCategory,
+        design: autoDesign,
+        model: '',
+        size: '',
+        color: '',
+        quantity: 1
+      };
+
+      const itemEl = document.createElement('div');
+      itemEl.className = 'multi-product-item';
+      itemEl.dataset.itemId = item.id;
+
+      itemEl.innerHTML = `
+        <div class="multi-product-item__header">
+          <h3 class="multi-product-item__title">Prenda ${index + 1}</h3>
+          ${index > 0 ? `<button type="button" class="multi-product-item__remove" data-remove-item>Eliminar</button>` : ''}
+        </div>
+
+        <!-- Categoría -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Categoría ${autoCategory ? '(Auto-detectado)' : ''} *</label>
+          <select class="multi-product-field__select" data-category-select ${autoCategory ? 'disabled' : ''}>
+            <option value="">-- Selecciona una categoría --</option>
+            ${categories.map(cat => `<option value="${cat.value}" ${cat.value === autoCategory ? 'selected' : ''}>${cat.label}</option>`).join('')}
+          </select>
+        </div>
+
+        <!-- Modelo/Diseño -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Diseño ${autoDesign ? '(Auto-detectado)' : ''} *</label>
+          <select class="multi-product-field__select" data-design-select ${autoDesign ? 'disabled' : 'disabled'}>
+            <option value="">-- Selecciona un diseño --</option>
+            ${autoCategory && productsByCategory[autoCategory] ? productsByCategory[autoCategory].map(d => `<option value="${d}" ${d === autoDesign ? 'selected' : ''}>${d}</option>`).join('') : ''}
+          </select>
+        </div>
+
+        <!-- Modelo -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Modelo *</label>
+          <div class="multi-product-field__buttons">
+            <button type="button" class="multi-product-button" data-model="Normal">Normal</button>
+            <button type="button" class="multi-product-button" data-model="Oversized">Oversized</button>
+          </div>
+        </div>
+
+        <!-- Talla -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Talla *</label>
+          <div class="multi-product-field__buttons">
+            ${sizes.map(size => `<button type="button" class="multi-product-button" data-size="${size}">${size}</button>`).join('')}
+          </div>
+        </div>
+
+        <!-- Color -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Color *</label>
+          <div class="multi-product-field__buttons">
+            ${colors.map(color => `<button type="button" class="multi-product-button" data-color="${color}">${color}</button>`).join('')}
+          </div>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="multi-product-field">
+          <label class="multi-product-field__label">Cantidad</label>
+          <div class="multi-product-quantity">
+            <button type="button" class="multi-product-quantity__btn" data-qty-decrease>−</button>
+            <input type="number" class="multi-product-quantity__input" value="1" min="1" data-qty-input>
+            <button type="button" class="multi-product-quantity__btn" data-qty-increase>+</button>
+          </div>
+        </div>
+      `;
+
+      itemsContainer.appendChild(itemEl);
+      itemsData.push(item);
+
+      // Event listeners
+      const categorySelect = itemEl.querySelector('[data-category-select]');
+      const designSelect = itemEl.querySelector('[data-design-select]');
+      const removeBtn = itemEl.querySelector('[data-remove-item]');
+      const modelButtons = itemEl.querySelectorAll('[data-model]');
+      const sizeButtons = itemEl.querySelectorAll('[data-size]');
+      const colorButtons = itemEl.querySelectorAll('[data-color]');
+      const qtyInput = itemEl.querySelector('[data-qty-input]');
+      const qtyBtnDec = itemEl.querySelector('[data-qty-decrease]');
+      const qtyBtnInc = itemEl.querySelector('[data-qty-increase]');
+
+      categorySelect.addEventListener('change', (e) => {
+        item.category = e.target.value;
+        item.design = '';
+        
+        // Actualizar opciones de diseño
+        designSelect.innerHTML = '<option value="">-- Selecciona un diseño --</option>';
+        if (item.category && productsByCategory[item.category]) {
+          productsByCategory[item.category].forEach(design => {
+            const option = document.createElement('option');
+            option.value = design;
+            option.textContent = design;
+            designSelect.appendChild(option);
+          });
+          designSelect.disabled = false;
+        } else {
+          designSelect.disabled = true;
+        }
+        updateSummary();
+      });
+
+      designSelect.addEventListener('change', (e) => {
+        item.design = e.target.value;
+        updateSummary();
+      });
+
+      modelButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          modelButtons.forEach(b => b.classList.remove('is-selected'));
+          btn.classList.add('is-selected');
+          item.model = btn.dataset.model;
+          updateSummary();
+        });
+      });
+
+      sizeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          sizeButtons.forEach(b => b.classList.remove('is-selected'));
+          btn.classList.add('is-selected');
+          item.size = btn.dataset.size;
+          updateSummary();
+        });
+      });
+
+      colorButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          colorButtons.forEach(b => b.classList.remove('is-selected'));
+          btn.classList.add('is-selected');
+          item.color = btn.dataset.color;
+          updateSummary();
+        });
+      });
+
+      qtyBtnDec.addEventListener('click', () => {
+        item.quantity = Math.max(1, item.quantity - 1);
+        qtyInput.value = item.quantity;
+        updateSummary();
+      });
+
+      qtyBtnInc.addEventListener('click', () => {
+        item.quantity++;
+        qtyInput.value = item.quantity;
+        updateSummary();
+      });
+
+      qtyInput.addEventListener('change', () => {
+        const value = parseInt(qtyInput.value);
+        item.quantity = isNaN(value) || value < 1 ? 1 : value;
+        qtyInput.value = item.quantity;
+        updateSummary();
+      });
+
+      if (removeBtn) {
+        removeBtn.addEventListener('click', () => {
+          itemEl.remove();
+          itemsData = itemsData.filter(i => i.id !== item.id);
+          updateSummary();
+        });
+      }
+
+      return item;
+    }
+
+    function updateSummary() {
+      summaryContainer.innerHTML = '';
+      
+      const validItems = itemsData.filter(item => item.category && item.design && item.model && item.size && item.color);
+      
+      if (validItems.length === 0) {
+        summaryContainer.innerHTML = '<p style="color: #6b7280; font-size: 1.2rem;">Aún no has configurado ninguna prenda</p>';
+        return;
+      }
+
+      validItems.forEach((item, index) => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'multi-product-summary__item';
+        itemEl.innerHTML = `
+          <strong>${index + 1}.</strong> ${item.quantity}x 
+          <span style="text-transform: capitalize; color: var(--color-primary); font-weight: 600;">${item.category}</span> 
+          ${item.design} (${item.model}) / Talla: ${item.size} / Color: ${item.color}
+        `;
+        summaryContainer.appendChild(itemEl);
+      });
+    }
+
+    // Agregar primer item automáticamente con auto-relleno
+    createProductItem(0, true);
+
+    // Botón para agregar más prendas
+    addBtn.addEventListener('click', () => {
+      createProductItem(itemsData.length, false);
+    });
+
+    // WhatsApp final order
+    whatsappBtn.addEventListener('click', () => {
+      const validItems = itemsData.filter(item => item.category && item.design && item.model && item.size && item.color);
+      
+      if (validItems.length === 0) {
+        alert('Por favor configura al menos una prenda');
+        return;
+      }
+
+      let message = '¡Hola ISSLAM! Quiero estos productos:%0A%0A';
+      validItems.forEach((item, index) => {
+        message += `${index + 1}. ${item.quantity}x ${item.category.toUpperCase()} ${item.design} (${item.model})%0A   Talla: ${item.size} | Color: ${item.color}%0A`;
+      });
+      message += '%0A¿Cómo puedo realizar el pago?';
+
+      const urlWhatsapp = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      window.open(urlWhatsapp, '_blank');
+    });
+  })();
+</script>
 
     function createProductItem(index) {
       const item = {
