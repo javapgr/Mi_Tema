@@ -82,7 +82,7 @@
         <article class="product-card product-card--promos">
           {% if product.compare_at_price > product.price %}
             <div class="product-card__discount-badge">
-              -{{ (((product.compare_at_price | minus: product.price) | divided_by: product.compare_at_price | times: 100) | round) }}%
+              -{{ product.compare_at_price | minus: product.price | divided_by: product.compare_at_price | times: 100 | round }}%
             </div>
           {% endif %}
           <a href="{{ product.url }}" class="product-card__link">

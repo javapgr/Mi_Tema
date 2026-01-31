@@ -1,1 +1,45 @@
-{"sections":{"marquee":{"type":"marquee-banner","settings":{"text":"⚽ OFERTAS EN DEPORTES - EQUÍPATE COMO CAMPEÓN","icon":"🔥","duration":20,"background_color":"#1a1a1a","background_color_end":"#4a0000"}},"carousel":{"type":"image-carousel","blocks":{"slide-1":{"type":"image","settings":{"alt_text":"Deportes - Slide 1"}},"slide-2":{"type":"image","settings":{"alt_text":"Deportes - Slide 2"}},"slide-3":{"type":"image","settings":{"alt_text":"Deportes - Slide 3"}}},"block_order":["slide-1","slide-2","slide-3"],"settings":{}},"hero":{"type":"hero-banner","settings":{"subtitle":"Equípate como un campeón","title":"⚽ Colección de Deportes","description":"Encuentra mercancía oficial de tus equipos y deportes favoritos","background_color":"#0D503C"}},"main":{"type":"collection-deportes","settings":{}}},"order":["marquee","carousel","hero","main"]}
+{
+	"sections": {
+		"marquee": {
+			"type": "marquee-banner",
+			"settings": {
+				"text": "⚽ OFERTAS EN DEPORTES - EQUÍPATE COMO CAMPEÓN",
+				"icon": "🔥",
+				"duration": 20,
+				"background_color": "#1a1a1a",
+				"background_color_end": "#4a0000"
+			}
+		},
+		"carousel": {
+			"type": "image-carousel",
+			"blocks": {
+				"slide-1": {"type": "image", "settings": {"alt_text": "Deportes - Slide 1"}},
+				"slide-2": {"type": "image", "settings": {"alt_text": "Deportes - Slide 2"}},
+				"slide-3": {"type": "image", "settings": {"alt_text": "Deportes - Slide 3"}}
+			},
+			"block_order": ["slide-1", "slide-2", "slide-3"],
+			"settings": {}
+		},
+		"showcase_marquee": {
+			"type": "marquee-showcase",
+			"settings": {
+				"eyebrow": "CAMPEONES EN MOVIMIENTO",
+				"headline": "LIMA 2026 / DOJA CAT",
+				"caption": "Sudor, ritmo y drop final que motiva a seguir",
+				"start_color": "#ffcd00",
+				"end_color": "#061008"
+			}
+		},
+		"hero": {
+			"type": "hero-banner",
+			"settings": {
+				"subtitle": "Equípate como un campeón",
+				"title": "⚽ Colección de Deportes",
+				"description": "Encuentra mercancía oficial de tus equipos y deportes favoritos",
+				"background_color": "#0D503C"
+			}
+		},
+		"main": {"type": "collection-deportes", "settings": {}}
+	},
+	"order": ["marquee", "carousel", "showcase_marquee", "hero", "main"]
+}

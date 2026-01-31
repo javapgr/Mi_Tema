@@ -1,34 +1,30 @@
-<!-- Newsletter Brevo - Listo para Usar -->
-<!-- Incluye este snippet en tus colecciones -->
+<!-- Sección: Newsletter Brevo -->
+<section class="newsletter-brevo section">
+  <div class="newsletter-brevo__content">
+    <h2 class="newsletter-brevo__title">{{ section.settings.title }}</h2>
+    <p class="newsletter-brevo__subtitle">{{ section.settings.subtitle }}</p>
 
-<section class="newsletter-brevo">
-  <div class="container">
-    <div class="newsletter-brevo__content">
-      <h2 class="newsletter-brevo__title">{{ section.settings.title }}</h2>
-      <p class="newsletter-brevo__subtitle">{{ section.settings.subtitle }}</p>
-      
-      <form class="newsletter-brevo__form" id="brevo-form">
-        <input
-          type="email"
-          name="email"
-          placeholder="{{ section.settings.placeholder }}"
-          required
-          class="newsletter-brevo__input"
-          autocomplete="email"
-        >
-        <button type="submit" class="newsletter-brevo__button">
-          {{ section.settings.button_text }}
-        </button>
-      </form>
+    <form class="newsletter-brevo__form" id="brevo-form-{{ section.id }}">
+      <input
+        type="email"
+        name="email"
+        placeholder="{{ section.settings.placeholder }}"
+        required
+        class="newsletter-brevo__input"
+        autocomplete="email"
+      >
+      <button type="submit" class="newsletter-brevo__button">
+        {{ section.settings.button_text }}
+      </button>
+    </form>
 
-      <div id="brevo-message" class="newsletter-brevo__message"></div>
-      
-      {% if section.settings.show_privacy %}
-        <p class="newsletter-brevo__privacy">
-          {{ section.settings.privacy_text }}
-        </p>
-      {% endif %}
-    </div>
+    <div id="brevo-message-{{ section.id }}" class="newsletter-brevo__message"></div>
+
+    {% if section.settings.show_privacy %}
+      <p class="newsletter-brevo__privacy">
+        {{ section.settings.privacy_text }}
+      </p>
+    {% endif %}
   </div>
 </section>
 
@@ -36,22 +32,22 @@
 (function() {
   'use strict';
 
-  // REEMPLAZA ESTOS VALORES CON LOS TUYOS DE BREVO
+  const sectionId = '{{ section.id }}';
   const BREVO_API_KEY = '{{ section.settings.brevo_api_key }}';
   const BREVO_LIST_ID = {{ section.settings.list_id }};
-  const CATEGORY = '{{ section.settings.category }}';
+  const CATEGORY = '{{ section.settings.category | escape }}';
   const API_ENDPOINT = 'https://api.brevo.com/v3/contacts';
 
-  const form = document.getElementById('brevo-form');
-  const messageEl = document.getElementById('brevo-message');
+  const form = document.getElementById(`brevo-form-${sectionId}`);
+  const messageEl = document.getElementById(`brevo-message-${sectionId}`);
 
-  // Limpiar mensaje anterior
+  if (!form || !messageEl) return;
+
   function clearMessage() {
     messageEl.textContent = '';
     messageEl.className = 'newsletter-brevo__message';
   }
 
-  // Mostrar mensaje
   function showMessage(text, type = 'success') {
     messageEl.textContent = text;
     messageEl.className = `newsletter-brevo__message newsletter-brevo__message--${type}`;
@@ -61,13 +57,11 @@
     }
   }
 
-  // Validar email
   function validateEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   }
 
-  // Enviar a Brevo
   async function subscribeToBrevo(email) {
     if (!validateEmail(email)) {
       showMessage('❌ Por favor ingresa un email válido', 'error');
@@ -99,19 +93,18 @@
             STORE: 'ISSLAM'
           },
           listIds: [parseInt(BREVO_LIST_ID)],
-          updateEnabled: true // Si el contacto existe, actualiza
+          updateEnabled: true
         })
       });
 
       if (response.status === 201 || response.status === 204) {
         showMessage('✅ ¡Bienvenido! Revisa tu email de confirmación', 'success');
         form.reset();
-        
-        // Track en Google Analytics si existe
+
         if (window.gtag) {
           gtag('event', 'newsletter_signup', {
-            'category': CATEGORY,
-            'email': email
+            category: CATEGORY,
+            email: email
           });
         }
 
@@ -135,14 +128,12 @@
     }
   }
 
-  // Event listener
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
     const email = this.querySelector('input[name="email"]').value;
     await subscribeToBrevo(email);
   });
 
-  // Autofocus
   form.querySelector('input[name="email"]').focus();
 })();
 </script>
@@ -150,87 +141,77 @@
 <style>
   .newsletter-brevo {
     padding: 3rem 0;
-    background: rgba(0, 0, 0, 0.1);
-    margin: 2rem 0;
+    background: linear-gradient(135deg, #FF0000 0%, #1a1a1a 100%);
+    color: #fff;
+    text-align: center;
   }
 
   .newsletter-brevo__content {
-    text-align: center;
     max-width: 600px;
     margin: 0 auto;
   }
 
   .newsletter-brevo__title {
-    font-size: 1.8rem;
-    font-weight: bold;
+    font-size: 2rem;
+    font-weight: 700;
     margin-bottom: 0.5rem;
-    color: inherit;
   }
 
   .newsletter-brevo__subtitle {
     font-size: 1rem;
-    margin-bottom: 2rem;
-    opacity: 0.8;
-    color: inherit;
+    margin-bottom: 1.5rem;
+    opacity: 0.85;
   }
 
   .newsletter-brevo__form {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
     flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: 1.5rem;
   }
 
   .newsletter-brevo__input {
     flex: 1;
     min-width: 250px;
     padding: 0.75rem 1rem;
-    border: 2px solid currentColor;
+    border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    color: inherit;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
     font-size: 1rem;
     transition: all 0.3s ease;
   }
 
   .newsletter-brevo__input:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
   }
 
   .newsletter-brevo__input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.6);
   }
 
   .newsletter-brevo__button {
     padding: 0.75rem 2rem;
-    background: currentColor;
-    color: white;
-    border: none;
     border-radius: 8px;
-    font-weight: bold;
+    background: #fff;
+    color: #1a1a1a;
+    font-weight: 700;
+    border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .newsletter-brevo__button:hover {
-    opacity: 0.8;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  .newsletter-brevo__button:active {
-    transform: translateY(0);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
 
   .newsletter-brevo__message {
-    min-height: 1.5rem;
-    font-weight: bold;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+    min-height: 1.2rem;
+    font-weight: 600;
   }
 
   .newsletter-brevo__message--success {
@@ -242,38 +223,23 @@
   }
 
   .newsletter-brevo__message--info {
-    color: #3B82F6;
+    color: #38BDF8;
   }
 
   .newsletter-brevo__message--loading {
     color: #F59E0B;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    from {
-      opacity: 0.6;
-    }
-    to {
-      opacity: 1;
-    }
   }
 
   .newsletter-brevo__privacy {
-    font-size: 0.8rem;
-    opacity: 0.6;
-    margin-top: 1rem;
-    line-height: 1.4;
+    font-size: 0.85rem;
+    opacity: 0.7;
+    max-width: 420px;
+    margin: 0 auto;
   }
 
-  /* Responsive */
   @media (max-width: 768px) {
     .newsletter-brevo {
       padding: 2rem 1rem;
-    }
-
-    .newsletter-brevo__title {
-      font-size: 1.4rem;
     }
 
     .newsletter-brevo__form {
@@ -281,7 +247,6 @@
       gap: 0.75rem;
     }
 
-    .newsletter-brevo__input,
     .newsletter-brevo__button {
       width: 100%;
     }
@@ -290,28 +255,28 @@
 
 {% schema %}
 {
-  "name": "Newsletter - Brevo",
+  "name": "Newsletter Brevo",
   "settings": [
     {
       "type": "header",
-      "content": "Contenido Newsletter"
+      "content": "Contenido"
     },
     {
       "type": "text",
       "id": "title",
       "label": "Título",
-      "default": "Suscríbete a Nuestro Newsletter"
+      "default": "Suscríbete al newsletter"
     },
     {
       "type": "text",
       "id": "subtitle",
       "label": "Subtítulo",
-      "default": "Recibe las últimas novedades directamente en tu correo"
+      "default": "Recibe las ofertas más recientes"
     },
     {
       "type": "text",
       "id": "placeholder",
-      "label": "Placeholder del input",
+      "label": "Placeholder del campo",
       "default": "tu@email.com"
     },
     {
@@ -322,30 +287,30 @@
     },
     {
       "type": "header",
-      "content": "Configuración Brevo"
+      "content": "Brevo"
     },
     {
       "type": "text",
       "id": "brevo_api_key",
-      "label": "API Key de Brevo",
-      "info": "Obtén tu API Key en: Brevo → Settings → API & Webhooks → v3 Keys",
+      "label": "API Key",
+      "info": "Brevo → Settings → API & Webhooks → v3 Keys",
       "placeholder": "xkeysib_..."
     },
     {
       "type": "number",
       "id": "list_id",
-      "label": "ID de Lista en Brevo",
-      "info": "Obtén el ID en: Brevo → Contacts → Lists → (tu lista)"
+      "label": "List ID",
+      "info": "Contacts → Lists"
     },
     {
       "type": "text",
       "id": "category",
-      "label": "Categoría (para tracking)",
+      "label": "Categoría",
       "default": "general"
     },
     {
       "type": "header",
-      "content": "Privacy"
+      "content": "Privacidad"
     },
     {
       "type": "checkbox",
@@ -357,14 +322,14 @@
       "type": "text",
       "id": "privacy_text",
       "label": "Texto de privacidad",
-      "default": "Respetamos tu privacidad. Desuscribete en cualquier momento."
+      "default": "Respetamos tu privacidad. Desuscribete cuando quieras."
     }
   ],
   "presets": [
     {
       "name": "Newsletter Brevo",
       "settings": {
-        "title": "Suscríbete al Newsletter",
+        "title": "Únete a ISSLAM",
         "category": "general"
       }
     }

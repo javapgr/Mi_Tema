@@ -64,14 +64,86 @@
           <div class="cart__summary">
             <div class="cart__summary-row">
               <span>Subtotal</span>
-              <span>{{ cart.total_price | money }}</span>
+              <span data-cart-subtotal>{{ cart.total_price | money }}</span>
+            </div>
+
+            <!-- Costo de Delivery Express -->
+            <div class="cart__summary-row cart__summary-row--delivery" style="display: none;">
+              <span>Delivery Express</span>
+              <span data-delivery-cost>S/. 0.00</span>
+            </div>
+
+            <div class="cart__summary-row cart__summary-row--total">
+              <span>Total</span>
+              <span data-cart-total>{{ cart.total_price | money }}</span>
             </div>
             
-            <p class="cart__summary-note">Impuestos y envío calculados en el checkout</p>
+            <p class="cart__summary-note">Impuestos incluidos</p>
 
-            <button type="submit" name="checkout" class="btn btn--primary cart__checkout">
-              Finalizar Compra
-            </button>
+            <!-- Método de Pago -->
+            <div class="cart__payment-method">
+              <label class="cart__payment-label">Método de Pago</label>
+              <div class="cart__payment-options">
+                <button type="button" class="cart__payment-btn is-selected" data-payment="checkout">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                  Tarjeta / Checkout
+                </button>
+                <button type="button" class="cart__payment-btn" data-payment="yape">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                  </svg>
+                  Yape
+                </button>
+              </div>
+            </div>
+
+            <!-- Panel de Yape (oculto por defecto) -->
+            <div class="cart__yape-panel" data-yape-panel style="display: none;">
+              <div class="cart__yape-info">
+                <p class="cart__yape-title">📱 Paga con Yape</p>
+                <div class="cart__yape-qr">
+                  <img src="{{ 'yape-qr.png' | asset_url }}" alt="QR Yape" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                  <div class="cart__yape-number" style="display: none;">
+                    <p><strong>Número Yape:</strong></p>
+                    <p class="cart__yape-phone">999 999 999</p>
+                  </div>
+                </div>
+                <p class="cart__yape-instruction">Escanea el QR o yapea al número indicado</p>
+                <p class="cart__yape-amount">Monto a pagar: <strong data-yape-amount>{{ cart.total_price | money }}</strong></p>
+              </div>
+
+              <div class="cart__yape-upload">
+                <label class="cart__yape-upload-label">
+                  <input type="file" accept="image/*" data-yape-file class="cart__yape-file-input">
+                  <span class="cart__yape-upload-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Subir comprobante de pago
+                  </span>
+                </label>
+                <p class="cart__yape-preview-name" data-yape-filename></p>
+                <img class="cart__yape-preview" data-yape-preview style="display: none;">
+              </div>
+
+              <button type="button" class="btn btn--primary cart__yape-confirm" data-yape-confirm disabled>
+                Confirmar Pedido con Yape
+              </button>
+              <p class="cart__yape-note">Te contactaremos por WhatsApp para confirmar tu pedido</p>
+            </div>
+
+            <!-- Botón de Checkout normal -->
+            <div class="cart__checkout-panel" data-checkout-panel>
+              <button type="submit" name="checkout" class="btn btn--primary cart__checkout">
+                Finalizar Compra
+              </button>
+            </div>
 
             <a href="{{ routes.all_products_collection_url }}" class="cart__continue">
               Continuar comprando
@@ -243,6 +315,192 @@
     text-decoration: underline;
   }
 
+  /* Payment Method */
+  .cart__payment-method {
+    margin-bottom: 2rem;
+  }
+
+  .cart__payment-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cart__payment-options {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .cart__payment-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1.2rem;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .cart__payment-btn:hover,
+  .cart__payment-btn.is-selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  .cart__payment-btn.is-selected svg {
+    stroke: white;
+  }
+
+  /* Yape Panel */
+  .cart__yape-panel {
+    background: #fff;
+    border: 2px solid #6B21A8;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .cart__yape-info {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .cart__yape-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #6B21A8;
+    margin-bottom: 1.5rem;
+  }
+
+  .cart__yape-qr {
+    margin-bottom: 1.5rem;
+  }
+
+  .cart__yape-qr img {
+    max-width: 180px;
+    border-radius: 8px;
+  }
+
+  .cart__yape-phone {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #6B21A8;
+    letter-spacing: 0.1em;
+  }
+
+  .cart__yape-instruction {
+    font-size: 1.3rem;
+    color: var(--color-text-light);
+    margin-bottom: 1rem;
+  }
+
+  .cart__yape-amount {
+    font-size: 1.6rem;
+    color: #1f2937;
+  }
+
+  .cart__yape-upload {
+    margin-bottom: 1.5rem;
+  }
+
+  .cart__yape-file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+  }
+
+  .cart__yape-upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    width: 100%;
+    padding: 1.2rem;
+    border: 2px dashed #6B21A8;
+    border-radius: 8px;
+    background: #faf5ff;
+    color: #6B21A8;
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .cart__yape-upload-btn:hover {
+    background: #f3e8ff;
+  }
+
+  .cart__yape-preview-name {
+    font-size: 1.2rem;
+    color: var(--color-text-light);
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  .cart__yape-preview {
+    max-width: 100%;
+    max-height: 200px;
+    margin-top: 1rem;
+    border-radius: 8px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cart__yape-confirm {
+    width: 100%;
+    padding: 1.6rem;
+    font-size: 1.6rem;
+    background: #6B21A8;
+    margin-bottom: 1rem;
+  }
+
+  .cart__yape-confirm:hover {
+    background: #581c87;
+  }
+
+  .cart__yape-confirm:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  .cart__yape-note {
+    font-size: 1.2rem;
+    color: var(--color-text-light);
+    text-align: center;
+  }
+
+  .cart__summary-row--total {
+    font-size: 2rem;
+    color: var(--color-primary);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 2rem;
+  }
+
+  .cart__summary-row--delivery {
+    font-size: 1.4rem;
+    font-weight: 500;
+    border-bottom: none;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+
   /* Empty Cart */
   .cart__empty {
     text-align: center;
@@ -302,6 +560,170 @@
 {
   "name": "Carrito Principal",
   "tag": "section",
-  "class": "cart-section"
+  "class": "cart-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "yape_phone",
+      "label": "Número Yape",
+      "default": "999 999 999"
+    },
+    {
+      "type": "image_picker",
+      "id": "yape_qr",
+      "label": "QR de Yape"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "Número WhatsApp (con código país)",
+      "default": "51999999999"
+    }
+  ]
 }
 {% endschema %}
+
+<script>
+(function() {
+  const cartSection = document.querySelector('.cart-section');
+  if (!cartSection) return;
+
+  const paymentBtns = cartSection.querySelectorAll('[data-payment]');
+  const yapePanel = cartSection.querySelector('[data-yape-panel]');
+  const checkoutPanel = cartSection.querySelector('[data-checkout-panel]');
+  const yapeFileInput = cartSection.querySelector('[data-yape-file]');
+  const yapePreview = cartSection.querySelector('[data-yape-preview]');
+  const yapeFilename = cartSection.querySelector('[data-yape-filename]');
+  const yapeConfirmBtn = cartSection.querySelector('[data-yape-confirm]');
+  const yapeAmountEl = cartSection.querySelector('[data-yape-amount]');
+  const cartTotalEl = cartSection.querySelector('[data-cart-total]');
+  const cartSubtotalEl = cartSection.querySelector('[data-cart-subtotal]');
+  const deliveryCostEl = cartSection.querySelector('[data-delivery-cost]');
+  const deliveryRow = cartSection.querySelector('.cart__summary-row--delivery');
+
+  let uploadedFile = null;
+  const whatsappNumber = '{{ section.settings.whatsapp_number | default: "51999999999" }}';
+  const cartTotal = {{ cart.total_price }};
+
+  // Calcular costo de delivery express desde propiedades del carrito
+  let deliveryExtraCents = 0;
+  {% for item in cart.items %}
+    {% if item.properties['Envío'] contains 'Express' %}
+      deliveryExtraCents += 1000 * {{ item.quantity }};
+    {% endif %}
+  {% endfor %}
+
+  const updateTotals = () => {
+    const finalTotal = cartTotal + deliveryExtraCents;
+    if (cartTotalEl) cartTotalEl.textContent = formatMoney(finalTotal);
+    if (yapeAmountEl) yapeAmountEl.textContent = formatMoney(finalTotal);
+    if (deliveryCostEl) deliveryCostEl.textContent = formatMoney(deliveryExtraCents);
+    if (deliveryRow) {
+      deliveryRow.style.display = deliveryExtraCents > 0 ? 'flex' : 'none';
+    }
+  };
+
+  const formatMoney = cents => {
+    return 'S/. ' + (cents / 100).toFixed(2);
+  };
+
+  updateTotals();
+
+  // Alternar método de pago
+  paymentBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      paymentBtns.forEach(b => b.classList.remove('is-selected'));
+      btn.classList.add('is-selected');
+
+      const method = btn.dataset.payment;
+      if (method === 'yape') {
+        yapePanel.style.display = 'block';
+        checkoutPanel.style.display = 'none';
+      } else {
+        yapePanel.style.display = 'none';
+        checkoutPanel.style.display = 'block';
+      }
+    });
+  });
+
+  // Subir comprobante
+  if (yapeFileInput) {
+    yapeFileInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      uploadedFile = file;
+      yapeFilename.textContent = file.name;
+
+      const reader = new FileReader();
+      reader.onload = event => {
+        yapePreview.src = event.target.result;
+        yapePreview.style.display = 'block';
+        yapeConfirmBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Confirmar pedido con Yape
+  if (yapeConfirmBtn) {
+    yapeConfirmBtn.addEventListener('click', () => {
+      if (!uploadedFile) {
+        alert('Por favor sube tu comprobante de pago');
+        return;
+      }
+
+      // Construir resumen del pedido
+      let orderSummary = '🛒 *NUEVO PEDIDO - YAPE*%0A%0A';
+      {% for item in cart.items %}
+        orderSummary += '• {{ item.product.title | escape }} ({{ item.variant.title | escape }}) x{{ item.quantity }}%0A';
+        {% if item.properties['Envío'] %}
+          orderSummary += '  Envío: {{ item.properties["Envío"] }}%0A';
+        {% endif %}
+      {% endfor %}
+      orderSummary += '%0A💰 *Total: ' + (yapeAmountEl ? yapeAmountEl.textContent : '{{ cart.total_price | money }}') + '*%0A';
+      orderSummary += '%0A📎 El comprobante será enviado en la siguiente imagen.';
+
+      // Abrir WhatsApp
+      const whatsappUrl = 'https://wa.me/' + whatsappNumber + '?text=' + orderSummary;
+      window.open(whatsappUrl, '_blank');
+
+      // Mostrar instrucciones
+      alert('Se abrirá WhatsApp. Por favor envía el mensaje y luego adjunta tu comprobante de pago.');
+    });
+  }
+
+  // Actualizar cantidad en carrito
+  const quantityBtns = cartSection.querySelectorAll('.cart-item__quantity-btn');
+  quantityBtns.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const key = btn.dataset.key;
+      const input = cartSection.querySelector(`.cart-item__quantity-input[data-key="${key}"]`);
+      if (!input) return;
+
+      let qty = parseInt(input.value, 10);
+      if (btn.dataset.action === 'increase') {
+        qty++;
+      } else if (btn.dataset.action === 'decrease') {
+        qty = Math.max(0, qty - 1);
+      }
+
+      input.value = qty;
+
+      // Actualizar carrito via AJAX
+      try {
+        const response = await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: key, quantity: qty })
+        });
+        if (response.ok) {
+          location.reload();
+        }
+      } catch (error) {
+        console.error('Error updating cart:', error);
+      }
+    });
+  });
+})();
+</script>

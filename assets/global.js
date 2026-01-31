@@ -55,22 +55,7 @@ function initMobileMenu() {
     });
   });
 
-  // Submenu toggle for mobile
-  const menuItems = nav.querySelectorAll('.header__menu-item');
-  menuItems.forEach(item => {
-    const link = item.querySelector('.header__menu-link');
-    const megaMenu = item.querySelector('.mega-menu');
-    
-    if (!megaMenu) return;
-
-    link.addEventListener('click', function(e) {
-      if (window.innerWidth <= 1024) {
-        e.preventDefault();
-        megaMenu.classList.toggle('is-open');
-        link.setAttribute('aria-expanded', megaMenu.classList.contains('is-open'));
-      }
-    });
-  });
+  // En móvil, los enlaces deben navegar directamente
 }
 
 /**
@@ -224,48 +209,7 @@ function initSmoothScroll() {
   });
 }
 
-/**
- * Lazy Loading Images (fallback for older browsers)
- */
-if ('loading' in HTMLImageElement.prototype === false) {
-  document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-    img.src = img.dataset.src || img.src;
-  });
-}
-
-/**
- * Cart Ajax Functions
- */
-const CartAjax = {
-  add: async function(id, quantity = 1) {
-    const response = await fetch('/cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id, quantity })
-    });
-    return response.json();
-  },
-
-  update: async function(updates) {
-    const response = await fetch('/cart/update.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ updates })
-    });
-    return response.json();
-  },
-
-  get: async function() {
-    const response = await fetch('/cart.js');
-    return response.json();
-  }
-};
-
 // Export for global use
 window.ISSLAM = {
-  CartAjax
+  // Global ISSLAM functions go here
 };

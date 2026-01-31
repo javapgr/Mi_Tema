@@ -1,4 +1,23 @@
 <!-- Header Principal con Mega Menú -->
+{% assign current_path = request.path | downcase %}
+{% assign is_home = false %}
+{% assign is_novios = false %}
+{% assign is_musica = false %}
+{% assign is_deportes = false %}
+{% assign is_anime = false %}
+{% assign is_juegos = false %}
+{% assign is_pelis = false %}
+{% assign is_promos = false %}
+
+{% if current_path == '/' %}{% assign is_home = true %}{% endif %}
+{% if current_path contains '/collections/novios' %}{% assign is_novios = true %}{% endif %}
+{% if current_path contains '/collections/musica' %}{% assign is_musica = true %}{% endif %}
+{% if current_path contains '/collections/deportes' %}{% assign is_deportes = true %}{% endif %}
+{% if current_path contains '/collections/anime' %}{% assign is_anime = true %}{% endif %}
+{% if current_path contains '/collections/juegos' %}{% assign is_juegos = true %}{% endif %}
+{% if current_path contains '/collections/peliculas-series' %}{% assign is_pelis = true %}{% endif %}
+{% if current_path contains '/collections/promos' %}{% assign is_promos = true %}{% endif %}
+
 <header class="header" data-header>
   <div class="header__wrapper">
     <!-- Logo -->
@@ -30,14 +49,64 @@
       <ul class="header__menu">
         <!-- INICIO -->
         <li class="header__menu-item">
-          <a href="/" class="header__menu-link">
+          <a href="/" class="header__menu-link{% if is_home %} header__menu-link--active{% endif %}">
             Inicio
           </a>
         </li>
 
+        <!-- NOVIOS -->
+        <li class="header__menu-item">
+          <a href="/collections/novios" class="header__menu-link{% if is_novios %} header__menu-link--active{% endif %}">
+            Novios
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </a>
+          <div class="mega-menu">
+            <div class="mega-menu__grid mega-menu__grid--6">
+              <a href="/collections/novios" class="mega-menu__item">
+                <div class="mega-menu__image-wrapper">
+                  <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&h=400&fit=crop" alt="Parejas" class="mega-menu__image">
+                </div>
+                <span class="mega-menu__title">Parejas</span>
+              </a>
+              <a href="/collections/novios" class="mega-menu__item">
+                <div class="mega-menu__image-wrapper">
+                  <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&h=400&fit=crop" alt="Romance" class="mega-menu__image">
+                </div>
+                <span class="mega-menu__title">Romance</span>
+              </a>
+              <a href="/collections/novios" class="mega-menu__item">
+                <div class="mega-menu__image-wrapper">
+                  <img src="https://images.unsplash.com/photo-1522078519451-bada1b30142b?w=400&h=400&fit=crop" alt="Amor" class="mega-menu__image">
+                </div>
+                <span class="mega-menu__title">Amor</span>
+              </a>
+              <a href="/collections/novios" class="mega-menu__item">
+                <div class="mega-menu__image-wrapper">
+                  <img src="https://images.unsplash.com/photo-1518230503028-bc35739df56e?w=400&h=400&fit=crop" alt="Pareja" class="mega-menu__image">
+                </div>
+                <span class="mega-menu__title">Pareja</span>
+              </a>
+              <a href="/collections/novios" class="mega-menu__item">
+                <div class="mega-menu__image-wrapper">
+                  <img src="https://images.unsplash.com/photo-1518499239289-11d72f10fc51?w=400&h=400&fit=crop" alt="San Valentín" class="mega-menu__image">
+                </div>
+                <span class="mega-menu__title">San Valentín</span>
+              </a>
+              <a href="/collections/novios" class="mega-menu__item">
+                <div class="mega-menu__image-wrapper">
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" alt="Momentos" class="mega-menu__image">
+                </div>
+                <span class="mega-menu__title">Momentos</span>
+              </a>
+            </div>
+          </div>
+        </li>
+
         <!-- MÚSICA -->
         <li class="header__menu-item">
-          <a href="/collections/all" class="header__menu-link">
+          <a href="/collections/musica" class="header__menu-link{% if is_musica %} header__menu-link--active{% endif %}">
             Música
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
@@ -45,37 +114,37 @@
           </a>
           <div class="mega-menu">
             <div class="mega-menu__grid mega-menu__grid--6">
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/musica" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://i.scdn.co/image/ab6761610000e5eb5a6bc4f35e15574ce0c2ac50" alt="Anuel AA" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Anuel AA</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/musica" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f" alt="Linkin Park" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Linkin Park</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/musica" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://i.scdn.co/image/ab6761610000e5eb5885f6c2655e726c2859c6a2" alt="Nirvana" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Nirvana</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/musica" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://i.scdn.co/image/ab6761610000e5eb859e4c14fa59296c8649e0e4" alt="Taylor Swift" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Taylor Swift</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/musica" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://i.scdn.co/image/ab6761610000e5ebb99cacf8acd5378206767261" alt="Lady Gaga" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Lady Gaga</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/musica" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://i.scdn.co/image/ab6761610000e5eb0c68f6c95232e716f0abee8d" alt="Kendrick Lamar" class="mega-menu__image">
                 </div>
@@ -87,7 +156,7 @@
 
         <!-- DEPORTES -->
         <li class="header__menu-item">
-          <a href="/collections/all" class="header__menu-link">
+          <a href="/collections/deportes" class="header__menu-link{% if is_deportes %} header__menu-link--active{% endif %}">
             Deportes
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
@@ -95,25 +164,25 @@
           </a>
           <div class="mega-menu">
             <div class="mega-menu__grid mega-menu__grid--4">
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/deportes" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Cristiano_Ronaldo_2018.jpg/440px-Cristiano_Ronaldo_2018.jpg" alt="CR7" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">CR7</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/deportes" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Lionel-Messi-Argentina-2022-FIFA-World-Cup_%28cropped%29.jpg/440px-Lionel-Messi-Argentina-2022-FIFA-World-Cup_%28cropped%29.jpg" alt="Messi" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Messi</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/deportes" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/LeBron_James_%2851959977144%29_%28cropped2%29.jpg/440px-LeBron_James_%2851959977144%29_%28cropped2%29.jpg" alt="LeBron" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">LeBron James</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/deportes" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Kobe_Bryant_2014.jpg/440px-Kobe_Bryant_2014.jpg" alt="Kobe" class="mega-menu__image">
                 </div>
@@ -125,7 +194,7 @@
 
         <!-- ANIMES -->
         <li class="header__menu-item">
-          <a href="/collections/all" class="header__menu-link">
+          <a href="/collections/anime" class="header__menu-link{% if is_anime %} header__menu-link--active{% endif %}">
             Animes
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
@@ -133,31 +202,31 @@
           </a>
           <div class="mega-menu">
             <div class="mega-menu__grid mega-menu__grid--5">
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/anime" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://m.media-amazon.com/images/I/81dH7-pLcWL._AC_UF1000,1000_QL80_.jpg" alt="Jujutsu Kaisen" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Jujutsu Kaisen</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/anime" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://m.media-amazon.com/images/I/81rXxXRmMRL._AC_UF1000,1000_QL80_.jpg" alt="Dragon Ball" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Dragon Ball</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/anime" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://m.media-amazon.com/images/I/71jvtGa2nXL._AC_UF1000,1000_QL80_.jpg" alt="Naruto" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Naruto</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/anime" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://m.media-amazon.com/images/I/81s5Tl3jDzL._AC_UF1000,1000_QL80_.jpg" alt="One Piece" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">One Piece</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/anime" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://m.media-amazon.com/images/I/71T8ZEHIP5L._AC_UF1000,1000_QL80_.jpg" alt="Attack on Titan" class="mega-menu__image">
                 </div>
@@ -169,7 +238,7 @@
 
         <!-- JUEGOS -->
         <li class="header__menu-item">
-          <a href="/collections/all" class="header__menu-link">
+          <a href="/collections/juegos" class="header__menu-link{% if is_juegos %} header__menu-link--active{% endif %}">
             Juegos
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
@@ -177,25 +246,25 @@
           </a>
           <div class="mega-menu">
             <div class="mega-menu__grid mega-menu__grid--4">
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/juegos" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://image.api.playstation.com/vulcan/ap/rnd/202308/1519/51e1e048f10f5a76315dc35cd6aa768792cef6a77f61c698.png" alt="GTA" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">GTA</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/juegos" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/phvVT0qZfcRms5qDAk0SI3CM.png" alt="God of War" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">God of War</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/juegos" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://image.api.playstation.com/vulcan/ap/rnd/202301/0312/eVfNqXBDpnwTWq1CBPsFHpnj.png" alt="Elden Ring" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Elden Ring</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/juegos" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/60eca3ac155247e21850c7d075d01ebf0f3f5dbf19ccd2a1.png" alt="Spider-Man" class="mega-menu__image">
                 </div>
@@ -207,7 +276,7 @@
 
         <!-- PELIS-SERIES -->
         <li class="header__menu-item">
-          <a href="/collections/all" class="header__menu-link">
+          <a href="/collections/peliculas-series" class="header__menu-link{% if is_pelis %} header__menu-link--active{% endif %}">
             Pelis-series
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
@@ -215,25 +284,25 @@
           </a>
           <div class="mega-menu">
             <div class="mega-menu__grid mega-menu__grid--4">
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/peliculas-series" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://m.media-amazon.com/images/I/71JNaA+gVpL._AC_UF1000,1000_QL80_.jpg" alt="Stranger Things" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Stranger Things</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/peliculas-series" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://m.media-amazon.com/images/I/81EBp0vOZZL._AC_UF1000,1000_QL80_.jpg" alt="Harry Potter" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Harry Potter</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/peliculas-series" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://m.media-amazon.com/images/I/91Rd3El+LqL._AC_UF1000,1000_QL80_.jpg" alt="Breaking Bad" class="mega-menu__image">
                 </div>
                 <span class="mega-menu__title">Breaking Bad</span>
               </a>
-              <a href="/collections/all" class="mega-menu__item">
+              <a href="/collections/peliculas-series" class="mega-menu__item">
                 <div class="mega-menu__image-wrapper">
                   <img src="https://m.media-amazon.com/images/I/91+PoMzGSGL._AC_UF1000,1000_QL80_.jpg" alt="Game of Thrones" class="mega-menu__image">
                 </div>
@@ -245,7 +314,7 @@
 
         <!-- PROMOS -->
         <li class="header__menu-item">
-          <a href="/collections/all" class="header__menu-link header__menu-link--highlight">
+          <a href="/collections/promos" class="header__menu-link header__menu-link--highlight{% if is_promos %} header__menu-link--active{% endif %}">
             Promos 🔥
           </a>
         </li>
@@ -312,14 +381,14 @@
     </button>
 
     <form class="search-modal__form" action="{{ routes.search_url }}" method="get">
-      <h2 class="search-modal__title">¿Qué buscas?</h2>
+      <h2 class="search-modal__title">¿Qué buscas hoy?</h2>
       
       <div class="search-modal__input-wrapper">
         <input 
           type="text" 
           name="q" 
           class="search-modal__input" 
-          placeholder="Buscar productos..."
+          placeholder="Búsquedas sugeridas..."
           autocomplete="off"
         >
         <button type="submit" class="search-modal__submit" aria-label="Enviar búsqueda">
@@ -331,31 +400,33 @@
       </div>
 
       <div class="search-modal__categories">
-        <h3 class="search-modal__categories-title">Categorías populares</h3>
+        <h3 class="search-modal__categories-title">Colecciones populares</h3>
         <div class="search-modal__categories-list">
-          <a href="/collections/all?q=Música" class="search-modal__category">
-            <span>🎵</span> Música
+          <a href="/collections/musica" class="search-modal__category" style="background-image: url('https://i.scdn.co/image/ab6761610000e5eb5a6bc4f35e15574ce0c2ac50');">
+            <span class="search-modal__category-text">🎵<br>Música</span>
           </a>
-          <a href="/collections/all?q=Deportes" class="search-modal__category">
-            <span>⚽</span> Deportes
+          <a href="/collections/deportes" class="search-modal__category" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Cristiano_Ronaldo_2018.jpg/440px-Cristiano_Ronaldo_2018.jpg');">
+            <span class="search-modal__category-text">⚽<br>Deportes</span>
           </a>
-          <a href="/collections/all?q=Animes" class="search-modal__category">
-            <span>🎌</span> Animes
+          <a href="/collections/anime" class="search-modal__category" style="background-image: url('https://m.media-amazon.com/images/I/81rXxXRmMRL._AC_UF1000,1000_QL80_.jpg');">
+            <span class="search-modal__category-text">🎌<br>Animes</span>
           </a>
-          <a href="/collections/all?q=Juegos" class="search-modal__category">
-            <span>🎮</span> Juegos
+          <a href="/collections/juegos" class="search-modal__category" style="background-image: url('https://image.api.playstation.com/vulcan/ap/rnd/202308/1519/51e1e048f10f5a76315dc35cd6aa768792cef6a77f61c698.png');">
+            <span class="search-modal__category-text">🎮<br>Juegos</span>
           </a>
-          <a href="/collections/all?q=Películas" class="search-modal__category">
-            <span>🎬</span> Películas
+          <a href="/collections/peliculas-series" class="search-modal__category" style="background-image: url('https://m.media-amazon.com/images/I/91Rd3El+LqL._AC_UF1000,1000_QL80_.jpg');">
+            <span class="search-modal__category-text">🎬<br>Películas</span>
           </a>
-          <a href="/collections/all?q=TV" class="search-modal__category">
-            <span>📺</span> TV Shows
+          <a href="/collections/peliculas-series" class="search-modal__category" style="background-image: url('https://m.media-amazon.com/images/I/71jvtGa2nXL._AC_UF1000,1000_QL80_.jpg');">
+            <span class="search-modal__category-text">📺<br>TV Shows</span>
           </a>
         </div>
       </div>
     </form>
   </div>
 </div>
+
+
 
 {% schema %}
 {

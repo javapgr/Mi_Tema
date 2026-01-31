@@ -1,0 +1,102 @@
+<!-- Marquee Showcase: texto impactante para cada colección -->
+<section class="marquee-showcase section">
+  <div class="marquee-showcase__inner">
+    <p class="marquee-showcase__eyebrow">{{ section.settings.eyebrow }}</p>
+    <h2 class="marquee-showcase__title">{{ section.settings.headline }}</h2>
+    <p class="marquee-showcase__caption">{{ section.settings.caption }}</p>
+  </div>
+</section>
+
+<style>
+  .marquee-showcase {
+    padding: 1rem 0;
+    background: linear-gradient(120deg, {{ section.settings.start_color }} 0%, {{ section.settings.end_color }} 100%);
+    color: #fff;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .marquee-showcase__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 auto;
+    max-width: 1000px;
+    padding: 0 1rem;
+  }
+
+  .marquee-showcase__eyebrow {
+    letter-spacing: 0.4em;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .marquee-showcase__title {
+    font-size: clamp(2.3rem, 4vw, 4rem);
+    font-weight: 800;
+    margin: 0;
+    text-transform: uppercase;
+    text-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  }
+
+  .marquee-showcase__caption {
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 768px) {
+    .marquee-showcase__title {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Marquee Showcase",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto superior",
+      "default": "EXCLUSIVO"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Titular",
+      "default": "LIMA 2026 / DOJA CAT"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Subtítulo",
+      "default": "Ritmo, flow y presencia"
+    },
+    {
+      "type": "color",
+      "id": "start_color",
+      "label": "Color inicial",
+      "default": "#FF4500"
+    },
+    {
+      "type": "color",
+      "id": "end_color",
+      "label": "Color final",
+      "default": "#1a1a1a"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Showcase"
+    }
+  ]
+}
+{% endschema %}

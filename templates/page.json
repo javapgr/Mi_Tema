@@ -3,7 +3,14 @@
     "main": {
       "type": "main-page",
       "settings": {}
+    },
+    "order-list": {
+      "type": "order-list",
+      "settings": {
+        "whatsapp_number": "51987654321"
+      }
     }
   },
-  "order": ["main"]
+  "order": ["main", "order-list"]
 }
+
